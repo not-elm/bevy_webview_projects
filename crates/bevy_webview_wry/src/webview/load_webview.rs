@@ -4,6 +4,7 @@ use crate::util::as_wry_rect;
 use crate::webview::handlers::{HandlerQueries, WryEventParams};
 use crate::webview::load_webview::ipc::IpcHandlerParams;
 use crate::webview::load_webview::protocol::feed_uri;
+use crate::webview::protocol::WryRequestSender;
 use crate::webview::WryWebViews;
 use crate::WryLocalRoot;
 use bevy::prelude::{App, Commands, Entity, Name, NonSend, NonSendMut, Or, Plugin, PreUpdate, Query, Res, Window, With, Without};
@@ -56,6 +57,7 @@ type Configs2<'a> = (
 
 type ConfigsPlatformSpecific<'a> = (&'a Theme, &'a BrowserAcceleratorKeys, &'a UseHttpsScheme);
 
+#[allow(clippy::too_many_arguments)]
 fn load_web_views(
     mut commands: Commands,
     mut web_views: NonSendMut<WryWebViews>,
@@ -78,6 +80,7 @@ fn load_web_views(
     event_params: WryEventParams,
     local_root: Res<WryLocalRoot>,
     windows: NonSend<WinitWindows>,
+    request_sender: NonSend<WryRequestSender>,
 ) {
     for (webview_entity, handlers, configs1, configs2, configs_platform, embed_within, bounds) in
         views.iter_mut()
@@ -95,6 +98,7 @@ fn load_web_views(
             configs2,
             &local_root,
             embed_within.is_some(),
+            request_sender.clone(),
         );
         let builder = feed_platform_configs(builder, configs_platform);
         let Some(Ok(webview)) = build_webview(builder, webview_entity, embed_within, &windows)
@@ -155,6 +159,7 @@ fn feed_configs2<'a>(
     (focused, hotkeys_zoom, user_agent, uri, initialization_scripts, csp, name): Configs2,
     local_root: &WryLocalRoot,
     is_embedded: bool,
+    request_sender: WryRequestSender,
 ) -> WebViewBuilder<'a> {
     let identifier = if let Some(name) = name {
         name.to_string()
@@ -174,7 +179,7 @@ fn feed_configs2<'a>(
         builder = builder.with_user_agent(user_agent);
     }
 
-    feed_uri(builder, uri, local_root, csp.cloned())
+    feed_uri(builder, uri, local_root, csp.cloned(), request_sender)
 }
 
 fn initialization_script(

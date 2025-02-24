@@ -4,6 +4,7 @@ use crate::webview::event_emitter::EventEmitterPlugin;
 use crate::webview::handlers::WryHandlersPlugin;
 use crate::webview::ipc_resolve::IpcResolvePlugin;
 use crate::webview::load_webview::LoadWebviewPlugin;
+use crate::webview::protocol::CustomProtocolPlugin;
 use crate::webview::visible::VisiblePlugin;
 use bevy::prelude::{App, Deref, DerefMut, Entity, Plugin};
 use bevy::utils::hashbrown::HashMap;
@@ -25,6 +26,7 @@ mod devtools;
     target_os = "openbsd",
 ))]
 mod linux;
+mod protocol;
 
 #[allow(missing_docs)]
 pub mod prelude {
@@ -49,6 +51,7 @@ impl Plugin for WebviewPlugin {
                 EventEmitterPlugin,
                 IpcResolvePlugin,
                 WryHandlersPlugin,
+                CustomProtocolPlugin,
                 #[cfg(any(
                     target_os = "linux",
                     target_os = "dragonfly",

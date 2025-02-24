@@ -68,6 +68,6 @@ fn resolve_event(
     mut er: EventReader<IpcResolveEvent>
 ) {
     for e in er.read() {
-        println!("Resolved: {:?}", e);
+        info!("Resolved: {:?}", e);
     }
 }
