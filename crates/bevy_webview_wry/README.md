@@ -121,7 +121,7 @@ fn read_webview_message(
     mut er: EventReader<IpcEvent<MessageFromWebview>>
 ) {
     for e in er.read() {
-        println!("webview message: {}", e.payload.message);
+        info!("webview message: {}", e.payload.message);
     }
 }
 ```

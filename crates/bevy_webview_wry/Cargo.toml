@@ -19,6 +19,7 @@ api = ["dep:bevy_flurx_api"]
 bevy = { workspace = true, features = [
     "bevy_winit",
     "bevy_window",
+    "bevy_asset",
     "bevy_color",
     "serialize",
 ] }
