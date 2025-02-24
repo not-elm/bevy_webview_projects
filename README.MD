@@ -7,3 +7,8 @@
 | [bevy_webview_core](crates/bevy_webview_core)         | Provides core logics for webview projects.          |
 | [bevy_webview_wry](crates/bevy_webview_wry/README.md) | allow to use webview using wry                      |
 
+## **Contact**
+
+📢 **For questions & contributions:**
+
+- **Discord:** `@not_not_elm`
