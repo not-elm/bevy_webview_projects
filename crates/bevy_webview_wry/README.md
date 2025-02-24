@@ -31,7 +31,7 @@ Add this to your `Cargo.toml`:
 
 ```toml
 [dependencies]
-bevy_webview_wry = { version = "0.2", features = ["api"] }
+bevy_webview_wry = { version = "0.3", features = ["api"] }
 
 # necessary if you want to use ipc-command.
 bevy_flurx = "0.9"
@@ -69,13 +69,15 @@ fn spawn_webview(
     // Converts the `Window` attached the entity into a webview window. 
     commands
         .entity(window.single())
-        .insert(WebviewUri::new("https://bevyengine.org/"));
+        .insert(Webview::Uri(WebviewUri::new("https://bevyengine.org/")));
 }
 ```
 
 ### Child window
 
 This feature is required `child_window` feature flag.
+
+Please refer [here](https://github.com/not-elm/bevy_child_window) for supported platforms.
 
 [examples/wry/child_window.rs](../../examples/wry/child_window.rs)
 ![child_window](../../examples/wry/child_window.gif)

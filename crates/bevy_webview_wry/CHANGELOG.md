@@ -1,4 +1,6 @@
-## Unreleased
+## v0.3.0
+
+[Release notes](https://github.com/not-elm/bevy_webview_projects/releases/tag/v0.3.0)
 
 ### Breaking Changes
 
