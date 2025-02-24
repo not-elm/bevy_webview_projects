@@ -24,7 +24,7 @@ serde = { workspace = true, optional = true }
 [dev-dependencies]
 bevy = { version = "0.15", default-features = false }
 bevy_flurx = { workspace = true }
-bevy_flurx_ipc = { workspace = true }
+bevy_flurx_ipc = { version = "*" }
 serde = { workspace = true }
 
 [features]
