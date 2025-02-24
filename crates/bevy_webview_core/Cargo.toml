@@ -11,7 +11,10 @@ repository.workspace = true
 edition.workspace = true
 
 [dependencies]
-bevy = { workspace = true }
+bevy = { workspace = true, features = [
+    "bevy_color",
+    "bevy_window",
+] }
 bevy_flurx_ipc = { workspace = true }
 serde = { workspace = true }
 serde_json = { workspace = true }
