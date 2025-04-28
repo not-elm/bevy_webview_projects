@@ -23,14 +23,14 @@ bevy = { workspace = true, features = [
     "bevy_color",
     "serialize",
 ] }
-bevy_flurx = { workspace = true }
 bevy_webview_core = { workspace = true }
 bevy_flurx_ipc = { workspace = true }
 bevy_flurx_api = { workspace = true, optional = true, features = ["full"] }
 serde = { workspace = true }
 serde_json = { workspace = true }
 rand = "0.9"
-bevy_child_window = { path = "../../../bevy_child_window", optional = true }
+bevy_child_window = { version = "0.2", optional = true }
+wry = { version = "0.51", features = ["transparent", "linux-body"] }
 
 [target.'cfg(any(target_os="ios", target_os="macos"))'.dependencies]
 objc2 = { version = "0.6" }
@@ -44,20 +44,12 @@ objc2-app-kit = { version = "0.3", features = [
 ] }
 objc2-foundation = { version = "0.3" }
 
-[dependencies.wry]
-version = "0.51"
-features = [
-    "transparent",
-    "linux-body",
-]
-
 [target.'cfg(any(target_os = "linux", target_os = "dragonfly", target_os = "freebsd", target_os = "netbsd", target_os = "openbsd"))'.dependencies]
 gtk = { version = "0.18" }
 rfd = { version = "0.15", default-features = false, features = ["gtk3"] }
 
 [dev-dependencies]
 bevy = "0.16"
-bevy_flurx = { workspace = true }
 bevy_flurx_ipc = { path = "../bevy_flurx_ipc" }
 serde = { workspace = true }
 serde_json = { workspace = true }
