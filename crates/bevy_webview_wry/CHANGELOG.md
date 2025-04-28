@@ -2,7 +2,7 @@
 
 ## Features
 
-- Support for bevy's v0.16
+- Upgrade bevy's version to v0.16.0
 
 ## v0.3.0
 
