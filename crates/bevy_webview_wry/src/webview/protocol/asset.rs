@@ -69,7 +69,7 @@ fn try_convert_to_response(
     response_builder
         .header(CONTENT_TYPE, mimetype)
         .body(content)
-        .map_err(|e| std::io::Error::new(std::io::ErrorKind::Other, e))
+        .map_err(std::io::Error::other)
 }
 
 struct NotImplError(PathBuf);
