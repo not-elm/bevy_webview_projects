@@ -6,7 +6,7 @@ use bevy::ecs::system::SystemParam;
 use bevy::input::common_conditions::input_just_released;
 #[cfg(not(target_os = "linux"))]
 use bevy::input::mouse::MouseMotion;
-use bevy::prelude::{any_with_component, on_event, App, Changed, Commands, Condition, Entity, EventReader, IntoSystemConfigs, MouseButton, NonSend, Plugin, Query, Update, Vec2, Window, With};
+use bevy::prelude::*;
 use bevy::winit::WinitWindows;
 use bevy_flurx_ipc::ipc_events::{IpcEvent, IpcEventExt};
 use bevy_webview_core::bundle::embedding::{Bounds, EmbedWithin};

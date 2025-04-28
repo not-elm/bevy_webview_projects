@@ -26,7 +26,7 @@ fn spawn_child_window(
             ..default()
         },
         Webview::Uri(WebviewUri::new("https://bevyengine.org/")),
-        ParentWindow(window.single()),
+        ParentWindow(window.single().expect("Parent window not found")),
     ));
 }
 

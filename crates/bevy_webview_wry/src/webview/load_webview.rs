@@ -28,7 +28,7 @@ impl Plugin for LoadWebviewPlugin {
 
         #[cfg(target_os = "macos")]
         {
-            use bevy::prelude::IntoSystemConfigs;
+            use bevy::prelude::IntoScheduleConfigs;
             app.add_systems(PreUpdate, (
                 resize_webview_inner_window.run_if(bevy::prelude::on_event::<bevy::window::WindowResized>),
             ));
@@ -263,8 +263,8 @@ unsafe fn attach_inner_window(
 
     webview.removeFromSuperview();
     webview.setAutoresizingMask(
-        NSAutoresizingMaskOptions::NSViewHeightSizable |
-            NSAutoresizingMaskOptions::NSViewWidthSizable,
+        NSAutoresizingMaskOptions::ViewHeightSizable |
+            NSAutoresizingMaskOptions::ViewWidthSizable,
     );
 
     let mtw = objc2_foundation::MainThreadMarker::new().unwrap();
@@ -285,14 +285,14 @@ unsafe fn attach_inner_window(
     inner_window.setFrame_display(content_rect, true);
     inner_window.setHidesOnDeactivate(false);
     inner_window.setTitlebarAppearsTransparent(true);
-    inner_window.setTitleVisibility(objc2_app_kit::NSWindowTitleVisibility::NSWindowTitleHidden);
+    inner_window.setTitleVisibility(objc2_app_kit::NSWindowTitleVisibility::Hidden);
 
     inner_window.setContentView(Some(webview));
 
     inner_window.becomeKeyWindow();
     inner_window.makeFirstResponder(Some(webview));
 
-    application_window.addChildWindow_ordered(&inner_window, objc2_app_kit::NSWindowOrderingMode::NSWindowAbove);
+    application_window.addChildWindow_ordered(&inner_window, objc2_app_kit::NSWindowOrderingMode::Above);
     application_window.makeFirstResponder(Some(&inner_window));
 
     inner_window.makeKeyAndOrderFront(None);

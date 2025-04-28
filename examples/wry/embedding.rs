@@ -38,7 +38,7 @@ fn spawn_webview(
     commands.spawn((
         Webview::Uri(WebviewUri::default()),
         // Specifies the window entity to embed.
-        EmbedWithin(window.single()),
+        EmbedWithin(window.single().expect("Parent window not found")),
         Resizable(true),
         // Grab the top of the webview and allow it to move.
         GripZone(10),
@@ -51,7 +51,7 @@ fn spawn_webview(
 
     commands.spawn((
         Webview::Uri(WebviewUri::new("https://bevyengine.org/")),
-        EmbedWithin(window.single()),
+        EmbedWithin(window.single().expect("Parent window not found")),
         Bounds {
             position: Vec2::new(700., 100.),
             size: Vec2::new(500., 500.),

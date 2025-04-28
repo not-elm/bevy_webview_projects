@@ -3,10 +3,7 @@ use crate::prelude::{WebviewInitialized, WryWebViews};
 use crate::util::as_wry_rect;
 use bevy::input::common_conditions::input_pressed;
 use bevy::math::Vec2;
-use bevy::prelude::{
-    not, Added, App, Changed, Commands, Entity, IntoSystemConfigs, MouseButton, NonSend, Or,
-    Plugin, Query, Update, Without,
-};
+use bevy::prelude::*;
 use bevy::window::Window;
 use bevy::winit::cursor::CursorIcon;
 use bevy_webview_core::prelude::*;

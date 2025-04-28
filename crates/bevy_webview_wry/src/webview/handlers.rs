@@ -330,5 +330,5 @@ fn convert_drag_drop_event(
 
 #[inline]
 fn send_wry_events<E: Event>(mut ew: EventWriter<E>, events: Res<WryEvents<E>>) {
-    ew.send_batch(events.take_events());
+    ew.write_batch(events.take_events());
 }

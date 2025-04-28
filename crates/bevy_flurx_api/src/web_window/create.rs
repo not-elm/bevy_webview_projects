@@ -1,6 +1,5 @@
 use crate::macros::api_plugin;
-use bevy::core::Name;
-use bevy::prelude::{Commands, In};
+use bevy::prelude::{Commands, In, Name};
 use bevy::utils::default;
 use bevy::window::{Window, WindowResolution};
 use bevy_flurx::action::once;

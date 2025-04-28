@@ -25,7 +25,7 @@ use std::path::{Path, PathBuf};
 ///
 /// fn spawn_webview(mut commands: Commands, window: Query<Entity, With<PrimaryWindow>>){
 ///     commands
-///         .entity(window.single())
+///         .entity(window.single().expect("Failed to obtain the window"))
 ///         // The actual URL is flurx://localhost/ui/example.html.
 ///         // show assets/ui/example.html
 ///         .insert(Webview::Uri(WebviewUri::relative_local("example.html")));

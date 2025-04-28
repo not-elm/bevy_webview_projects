@@ -110,7 +110,7 @@ mod tests {
         });
         app.update();
         app.world_mut().run_system_once(move |handlers: Query<&IpcHandlers>| {
-            assert!(handlers.single().get(ipc_id).is_some());
+            assert!(handlers.single().expect("Parent window not found").get(ipc_id).is_some());
         }).expect("Failed to run system");
     }
 }

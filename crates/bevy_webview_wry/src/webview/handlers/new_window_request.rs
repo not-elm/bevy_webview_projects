@@ -52,7 +52,7 @@ fn open_new_window(
             ))
             .id();
 
-        ew.send(NewWindowOpened {
+        ew.write(NewWindowOpened {
             webview_entity: request.webview_entity,
             opened_window_entity,
             url: request.url,

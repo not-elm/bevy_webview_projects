@@ -20,7 +20,7 @@ fn insert_webview(
     window: Query<Entity, With<PrimaryWindow>>,
 ) {
     commands
-        .entity(window.single())
+        .entity(window.single().expect("Parent window not found"))
         .insert(Webview::Html("<html><body><h1>Hello world!</h1></body></html>".to_string()));
 }
 
