@@ -1,3 +1,9 @@
+## Unreleased
+
+## Features
+
+- Support for bevy's v0.16
+
 ## v0.3.0
 
 [Release notes](https://github.com/not-elm/bevy_webview_projects/releases/tag/v0.3.0)
