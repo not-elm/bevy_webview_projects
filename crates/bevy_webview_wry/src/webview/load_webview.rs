@@ -174,7 +174,7 @@ fn feed_configs2<'a>(
     let mut builder = builder
         .with_focused(focused.0)
         .with_hotkeys_zoom(hotkeys_zoom.0)
-        .with_initialization_script(&initialization_script(initialization_scripts, &identifier, is_embedded));
+        .with_initialization_script(initialization_script(initialization_scripts, &identifier, is_embedded));
     if let Some(user_agent) = user_agent.0.as_ref() {
         builder = builder.with_user_agent(user_agent);
     }
@@ -331,7 +331,7 @@ fn resize_webview_inner_window(
         // that the `AppKitWindowHandle` contains a valid pointer to an
         // `NSView`.
         // Unwrap is fine, since the pointer came from `NonNull`.
-        let ns_view: objc2::rc::Id<objc2_app_kit::NSView> = unsafe { objc2::rc::Id::retain(ns_view.cast()) }.unwrap();
+        let ns_view: objc2::rc::Retained<objc2_app_kit::NSView> = unsafe { objc2::rc::Retained::retain(ns_view.cast()) }.unwrap();
         let Some(ns_window) = ns_view.window() else {
             continue;
         };
