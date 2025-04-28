@@ -1,7 +1,8 @@
 //! Defines the ipc commands and the queue to execute them.
 
-use bevy::prelude::{error, App, Entity, Event, EventWriter, IntoSystemConfigs, Plugin, PreUpdate, Res, Resource};
-use bevy::utils::HashMap;
+use bevy::log::error;
+use bevy::platform::collections::HashMap;
+use bevy::prelude::{App, Entity, Event, EventWriter, IntoScheduleConfigs, Plugin, PreUpdate, Res, Resource};
 use serde::de::DeserializeOwned;
 use serde::Deserialize;
 use std::sync::{Arc, Mutex};
@@ -127,7 +128,7 @@ fn send_ipc_events<E: DeserializeOwned + Send + Sync + 'static>(
     ipc_events: Res<IpcEvents<E>>,
 ) {
     if let Ok(mut guard) = ipc_events.0.try_lock() {
-        ew.send_batch(std::mem::take(&mut *guard));
+        ew.write_batch(std::mem::take(&mut *guard));
     }
 }
 

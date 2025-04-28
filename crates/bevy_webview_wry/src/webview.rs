@@ -6,8 +6,8 @@ use crate::webview::ipc_resolve::IpcResolvePlugin;
 use crate::webview::load_webview::LoadWebviewPlugin;
 use crate::webview::protocol::CustomProtocolPlugin;
 use crate::webview::visible::VisiblePlugin;
+use bevy::platform::collections::HashMap;
 use bevy::prelude::{App, Deref, DerefMut, Entity, Plugin};
-use bevy::utils::hashbrown::HashMap;
 use bevy_flurx_ipc::FlurxIpcPlugin;
 
 mod event_emitter;

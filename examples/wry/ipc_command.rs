@@ -28,7 +28,7 @@ fn spawn_webview(
     mut commands: Commands,
     window: Query<Entity, With<PrimaryWindow>>,
 ) {
-    commands.entity(window.single()).insert((
+    commands.entity(window.single().expect("Parent window was not found")).insert((
         Num(1),
         // Display `assets/ui/ipc_command/index.html` within the webview
         Webview::default(),

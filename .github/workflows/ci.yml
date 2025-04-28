@@ -23,6 +23,7 @@ jobs:
         with:
           toolchain: 'nightly'
           components: 'clippy,rust-docs'
+          
       - name: Install alsa and udev
         run: |
           sudo apt-get update && sudo apt-get install --no-install-recommends libasound2-dev \
@@ -40,10 +41,10 @@ jobs:
         uses: Swatinem/rust-cache@v2
 
       - name: Clippy all features
-        run: cargo clippy --all-features --tests -- -D warnings
+        run: cargo clippy --all --all-features --tests -- -D warnings
 
       - name: Test all features
-        run: cargo test --all-features
+        run: cargo test --all-features --all
 
       - name: Doc lint
         run: cargo +nightly doc --all-features --no-deps

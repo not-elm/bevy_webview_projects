@@ -28,16 +28,16 @@ fn send_dragdrop_event(
     for event in events.take_events() {
         match event.event {
             DragDropEvent::Enter(enter) => {
-                entered.send(enter);
+                entered.write(enter);
             }
             DragDropEvent::Over(event) => {
-                over.send(event);
+                over.write(event);
             }
             DragDropEvent::Drop(event) => {
-                dropped.send(event);
+                dropped.write(event);
             }
             DragDropEvent::Leave(event) => {
-                leaved.send(event);
+                leaved.write(event);
             }
         }
     }

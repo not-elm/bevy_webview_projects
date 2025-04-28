@@ -30,7 +30,7 @@ fn spawn_webview(
     window: Query<Entity, With<PrimaryWindow>>,
 ) {
     // Display `assets/ui/event_emit/index.html` within the webview.
-    commands.entity(window.single()).insert(Webview::default());
+    commands.entity(window.single().expect("Window wasn't found")).insert(Webview::default());
 }
 
 fn emit_event(

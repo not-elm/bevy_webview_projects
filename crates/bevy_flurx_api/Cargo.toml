@@ -18,7 +18,7 @@ notification = ["dep:notify-rust"]
 os = ["dep:sysinfo", "dep:sys-locale"]
 monitor = []
 web_window = ["dep:winit"]
-http = ["bevy_flurx/tokio", "bevy_flurx/effect", "dep:reqwest"]
+http = ["bevy_flurx/tokio", "bevy_flurx/side-effect", "dep:reqwest"]
 full = [
     "fs",
     "clipboard",
@@ -40,13 +40,13 @@ dirs = { version = "6", optional = true }
 arboard = { version = "3", optional = true }
 rfd = { version = "0.15", default-features = false, optional = true }
 notify-rust = { version = "4", optional = true }
-sysinfo = { version = "0.33", optional = true }
+sysinfo = { version = "0.34", optional = true }
 sys-locale = { version = "0.3", optional = true }
 winit = { version = "0.30", features = ["serde"], optional = true }
 reqwest = { version = "0.12", features = ["json"], optional = true }
 
 [dev-dependencies]
-bevy = "0.15"
+bevy = "0.16"
 bevy_webview_wry = { path = "../bevy_webview_wry" }
 
 [lints]

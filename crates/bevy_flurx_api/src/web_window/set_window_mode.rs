@@ -1,10 +1,10 @@
 use crate::macros::api_plugin;
 use crate::web_window::WebWinitWindowParams;
-use bevy::prelude::{In, MonitorSelection};
+use bevy::prelude::{In, MonitorSelection, VideoModeSelection};
 use bevy::window::WindowMode;
 use bevy_flurx::action::{once, Action};
-use serde::Deserialize;
 use bevy_flurx_ipc::prelude::*;
+use serde::Deserialize;
 
 api_plugin!(
     /// You'll be able to set fullscreen state of the window decorations from a webview.
@@ -41,7 +41,7 @@ fn system(
         return;
     };
     window.mode = match args.1 {
-        VideoModeState::Fullscreen => WindowMode::Fullscreen(MonitorSelection::Current),
+        VideoModeState::Fullscreen => WindowMode::Fullscreen(MonitorSelection::Current, VideoModeSelection::Current),
         VideoModeState::Borderless => WindowMode::BorderlessFullscreen(MonitorSelection::Current),
         VideoModeState::Windowed => WindowMode::Windowed
     };

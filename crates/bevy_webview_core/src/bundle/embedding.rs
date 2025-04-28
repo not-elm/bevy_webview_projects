@@ -29,7 +29,7 @@ mod grip_zone;
 /// ){
 ///     commands.spawn((
 ///         Webview::default(),
-///         EmbedWithin(window.single()),
+///         EmbedWithin(window.single().expect("Parent window not found")),
 ///     ));
 /// }
 #[repr(transparent)]

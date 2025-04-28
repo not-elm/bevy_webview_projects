@@ -15,7 +15,7 @@ name = "progress"
 path = "tests/index.rs"
 
 [dependencies]
-bevy = { workspace = true, features = ["serialize"] }
+bevy = { workspace = true, features = ["serialize", "bevy_log"] }
 bevy_flurx_ipc_macro = { workspace = true }
 bevy_flurx = { workspace = true }
 serde = { workspace = true }
@@ -23,7 +23,7 @@ serde_json = { workspace = true }
 
 [dev-dependencies]
 trybuild = "1"
-bevy = "0.15"
+bevy = { workspace = true }
 
 [lints]
 workspace = true

@@ -2,8 +2,8 @@ mod asset;
 
 use crate::webview::protocol::asset::{convert_to_response, WryRequestArgs, WryResponseBody, WryResponseHandle, WryResponseLoader};
 use bevy::app::{App, Plugin};
+use bevy::platform::collections::hash_map::HashMap;
 use bevy::prelude::*;
-use bevy::utils::HashMap;
 use bevy_webview_core::prelude::Csp;
 use std::path::PathBuf;
 use std::sync::mpsc::{Receiver, Sender};

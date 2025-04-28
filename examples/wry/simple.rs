@@ -20,7 +20,7 @@ fn spawn_webview(
 ) {
     // Converts the `Window` attached the entity into a webview window. 
     commands
-        .entity(window.single())
+        .entity(window.single().expect("Parent window not found"))
         .insert(Webview::Uri(WebviewUri::new("https://bevyengine.org/")));
 }
 
