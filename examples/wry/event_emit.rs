@@ -17,6 +17,7 @@ fn main() {
             }
         ))
         .insert_resource(CountTimer(Timer::new(Duration::from_secs(1), TimerMode::Repeating)))
+        .add_ipc_trigger("count_event")
         .add_systems(Startup, spawn_webview)
         .add_systems(Update, emit_event)
         .run();
