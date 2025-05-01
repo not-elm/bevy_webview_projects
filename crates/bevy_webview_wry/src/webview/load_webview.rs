@@ -258,7 +258,7 @@ unsafe fn attach_inner_window(
     is_transparent: bool,
     application_window: &objc2_app_kit::NSWindow,
     webview: &wry::WryWebView,
-) {
+) { unsafe {
     use objc2_app_kit::NSAutoresizingMaskOptions;
 
     webview.removeFromSuperview();
@@ -305,7 +305,7 @@ unsafe fn attach_inner_window(
         #[allow(deprecated)]
         NSApplication::activateIgnoringOtherApps(&app, true);
     }
-}
+}}
 
 #[cfg(target_os = "macos")]
 fn resize_webview_inner_window(

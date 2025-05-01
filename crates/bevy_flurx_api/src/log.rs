@@ -1,8 +1,7 @@
 //! Provides mechanism to output the logs.
 
-use bevy::app::Update;
 use bevy::log;
-use bevy::prelude::{App, Event, EventReader, Plugin, Trigger};
+use bevy::prelude::{App, Event, Plugin, Trigger};
 use bevy_flurx_ipc::ipc_trigger::IpcTriggerExt;
 use serde::Deserialize;
 
