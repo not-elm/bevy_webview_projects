@@ -7,7 +7,6 @@ use bevy_flurx_ipc::component::IpcHandlers;
 pub use browser_accelerator_keys::BrowserAcceleratorKeys;
 pub use csp::Csp;
 pub use enable_clipboard::EnableClipboard;
-pub use event_emitter::EventEmitter;
 pub use focused::InitializeFocused;
 pub use handler::*;
 pub use hotkeys_zoom::HotkeysZoom;
@@ -25,7 +24,6 @@ mod auto_play;
 mod background;
 mod browser_accelerator_keys;
 mod enable_clipboard;
-mod event_emitter;
 mod focused;
 mod handler;
 mod hotkeys_zoom;
@@ -101,7 +99,4 @@ pub struct WebViewBundle {
 
     /// [`OnNewWindowRequest`]
     pub on_new_window_request: OnNewWindowRequest,
-
-    /// [`EventEmitter`]
-    pub event_emitter: EventEmitter,
 }

@@ -17,7 +17,6 @@ fn main() {
             }
         ))
         .insert_resource(CountTimer(Timer::new(Duration::from_secs(1), TimerMode::Repeating)))
-        .add_ipc_trigger("count_event")
         .add_systems(Startup, spawn_webview)
         .add_systems(Update, emit_event)
         .run();
@@ -35,17 +34,18 @@ fn spawn_webview(
 }
 
 fn emit_event(
+    mut commands: Commands,
     mut timer: ResMut<CountTimer>,
-    mut views: Query<&mut EventEmitter>,
     mut count: Local<usize>,
     time: Res<Time>,
 ) {
     if timer.0.tick(time.delta()).finished() {
         *count += 1;
-        for mut emitter in views.iter_mut() {
-            emitter.emit("count_event", serde_json::json!({
+        commands.trigger(EmitEventToWebview {
+            id: "count_event".to_string(),
+            payload: EventPayload::new(serde_json::json!({
                 "count" : *count
-            }));
-        }
+            })),
+        });
     }
 }

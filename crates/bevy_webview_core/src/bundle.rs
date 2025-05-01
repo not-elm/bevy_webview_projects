@@ -1,4 +1,4 @@
-use crate::prelude::{AutoPlay, Background, Bounds, DragDropEvent, DragEntered, DragLeave, DragOver, Dropped, EmbedWithin, EnableClipboard, EventEmitter, GripZone, HotkeysZoom, Incognito, InitializeFocused, IsOpenDevtools, PassedUrl, Resizable, Theme, UseDevtools, UseHttpsScheme, WebviewUri, WebviewVisible};
+use crate::prelude::{AutoPlay, Background, Bounds, DragDropEvent, DragEntered, DragLeave, DragOver, Dropped, EmbedWithin, EnableClipboard, GripZone, HotkeysZoom, Incognito, InitializeFocused, IsOpenDevtools, PassedUrl, Resizable, Theme, UseDevtools, UseHttpsScheme, WebviewUri, WebviewVisible};
 use bevy::prelude::{App, Component, Plugin, Reflect, ReflectComponent, ReflectDeserialize, ReflectSerialize};
 use serde::{Deserialize, Serialize};
 
@@ -33,7 +33,6 @@ impl Plugin for WebViewBundlesPlugin {
             .register_type::<AutoPlay>()
             .register_type::<Background>()
             .register_type::<EnableClipboard>()
-            .register_type::<EventEmitter>()
             .register_type::<WebviewUri>()
             .register_type::<UseDevtools>()
             .register_type::<IsOpenDevtools>()

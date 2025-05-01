@@ -95,7 +95,7 @@ You can listen events from the webview and, conversely, emit events to the webvi
 
 #### Webview(javascript) -> bevy
 
-[examples/wry/event_listen.rs](../../examples/wry/event_listen.rs)
+[examples/wry/event_listen.rs](../../examples/wry/ipc_trigger.rs)
 
 ___javascript___
 
@@ -130,7 +130,7 @@ fn read_webview_message(
 
 #### bevy -> Webview(javascript)
 
-[examples/wry/event_emit.rs](../../examples/wry/event_emit.rs)
+[examples/wry/event_emit.rs](../../examples/wry/send_webview.rs)
 
 ___javascript___
 

@@ -52,7 +52,6 @@ use std::path::{Path, PathBuf};
     OnDragDrop,
     OnNavigation,
     OnNewWindowRequest,
-    EventEmitter,
 )]
 #[reflect(Component, Default, Serialize, Deserialize)]
 pub enum Webview {

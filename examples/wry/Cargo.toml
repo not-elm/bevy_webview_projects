@@ -30,11 +30,11 @@ path = "ipc_command.rs"
 
 [[example]]
 name = "wry_event_emit"
-path = "event_emit.rs"
+path = "send_webview.rs"
 
 [[example]]
 name = "wry_event_listen"
-path = "event_listen.rs"
+path = "ipc_trigger.rs"
 
 [[example]]
 name = "wry_embedding"
