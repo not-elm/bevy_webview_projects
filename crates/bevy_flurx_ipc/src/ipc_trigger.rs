@@ -1,4 +1,4 @@
-//! Defines the ipc commands and the queue to execute them.
+//! Provides a mechanism to convert messages from external processes into [`Trigger`](bevy::prelude::Trigger).
 
 use bevy::prelude::{App, Commands, Entity, Event, IntoScheduleConfigs, Plugin, PreUpdate, Res, ResMut, Resource};
 use serde::de::DeserializeOwned;
@@ -6,7 +6,7 @@ use std::sync::{Arc, Mutex};
 
 /// The ipc message.
 pub struct IpcTriggerMessage {
-    /// The entity associated with webview .
+    /// The target entity of [`Trigger`](bevy::prelude::Trigger).
     pub target: Option<Entity>,
 
     /// event id
@@ -16,6 +16,7 @@ pub struct IpcTriggerMessage {
     pub payload: String,
 }
 
+/// The structure to send IPC messages.
 #[repr(transparent)]
 #[derive(Resource, Clone, Default)]
 pub struct IpcTriggerSender(Arc<Mutex<Vec<IpcTriggerMessage>>>);

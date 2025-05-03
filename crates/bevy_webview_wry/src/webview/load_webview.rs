@@ -258,54 +258,57 @@ unsafe fn attach_inner_window(
     is_transparent: bool,
     application_window: &objc2_app_kit::NSWindow,
     webview: &wry::WryWebView,
-) { unsafe {
-    use objc2_app_kit::NSAutoresizingMaskOptions;
+) {
+    // SAFETY: The `webview` is a valid pointer to an `NSView`.
+    unsafe {
+        use objc2_app_kit::NSAutoresizingMaskOptions;
 
-    webview.removeFromSuperview();
-    webview.setAutoresizingMask(
-        NSAutoresizingMaskOptions::ViewHeightSizable |
-            NSAutoresizingMaskOptions::ViewWidthSizable,
-    );
+        webview.removeFromSuperview();
+        webview.setAutoresizingMask(
+            NSAutoresizingMaskOptions::ViewHeightSizable |
+                NSAutoresizingMaskOptions::ViewWidthSizable,
+        );
 
-    let mtw = objc2_foundation::MainThreadMarker::new().unwrap();
-    let inner_window = objc2_app_kit::NSPanel::new(mtw);
-    inner_window.setTitle(&objc2_foundation::NSString::from_str(""));
-    inner_window.setStyleMask(
-        objc2_app_kit::NSWindowStyleMask::Titled |
-            objc2_app_kit::NSWindowStyleMask::FullSizeContentView
-    );
-    if is_transparent {
-        inner_window.setOpaque(false);
-        inner_window.setBackgroundColor(Some(&objc2_app_kit::NSColor::clearColor()));
+        let mtw = objc2_foundation::MainThreadMarker::new().unwrap();
+        let inner_window = objc2_app_kit::NSPanel::new(mtw);
+        inner_window.setTitle(&objc2_foundation::NSString::from_str(""));
+        inner_window.setStyleMask(
+            objc2_app_kit::NSWindowStyleMask::Titled |
+                objc2_app_kit::NSWindowStyleMask::FullSizeContentView
+        );
+        if is_transparent {
+            inner_window.setOpaque(false);
+            inner_window.setBackgroundColor(Some(&objc2_app_kit::NSColor::clearColor()));
+        }
+        inner_window.setMovable(false);
+        inner_window.makeFirstResponder(Some(webview));
+
+        let content_rect = application_window.contentRectForFrameRect(application_window.frame());
+        inner_window.setFrame_display(content_rect, true);
+        inner_window.setHidesOnDeactivate(false);
+        inner_window.setTitlebarAppearsTransparent(true);
+        inner_window.setTitleVisibility(objc2_app_kit::NSWindowTitleVisibility::Hidden);
+
+        inner_window.setContentView(Some(webview));
+
+        inner_window.becomeKeyWindow();
+        inner_window.makeFirstResponder(Some(webview));
+
+        application_window.addChildWindow_ordered(&inner_window, objc2_app_kit::NSWindowOrderingMode::Above);
+        application_window.makeFirstResponder(Some(&inner_window));
+
+        inner_window.makeKeyAndOrderFront(None);
+
+        use objc2_app_kit::NSApplication;
+        let app = NSApplication::sharedApplication(mtw);
+        if objc2_foundation::NSProcessInfo::processInfo().operatingSystemVersion().majorVersion >= 14 {
+            NSApplication::activate(&app);
+        } else {
+            #[allow(deprecated)]
+            NSApplication::activateIgnoringOtherApps(&app, true);
+        }
     }
-    inner_window.setMovable(false);
-    inner_window.makeFirstResponder(Some(webview));
-
-    let content_rect = application_window.contentRectForFrameRect(application_window.frame());
-    inner_window.setFrame_display(content_rect, true);
-    inner_window.setHidesOnDeactivate(false);
-    inner_window.setTitlebarAppearsTransparent(true);
-    inner_window.setTitleVisibility(objc2_app_kit::NSWindowTitleVisibility::Hidden);
-
-    inner_window.setContentView(Some(webview));
-
-    inner_window.becomeKeyWindow();
-    inner_window.makeFirstResponder(Some(webview));
-
-    application_window.addChildWindow_ordered(&inner_window, objc2_app_kit::NSWindowOrderingMode::Above);
-    application_window.makeFirstResponder(Some(&inner_window));
-
-    inner_window.makeKeyAndOrderFront(None);
-
-    use objc2_app_kit::NSApplication;
-    let app = NSApplication::sharedApplication(mtw);
-    if objc2_foundation::NSProcessInfo::processInfo().operatingSystemVersion().majorVersion >= 14 {
-        NSApplication::activate(&app);
-    } else {
-        #[allow(deprecated)]
-        NSApplication::activateIgnoringOtherApps(&app, true);
-    }
-}}
+}
 
 #[cfg(target_os = "macos")]
 fn resize_webview_inner_window(

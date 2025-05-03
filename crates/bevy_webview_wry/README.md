@@ -130,7 +130,7 @@ fn read_webview_message(
 
 #### bevy -> Webview(javascript)
 
-[examples/wry/event_emit.rs](../../examples/wry/send_webview.rs)
+[examples/wry/event_emit.rs](../../examples/wry/emit_event_to_webview.rs)
 
 ___javascript___
 

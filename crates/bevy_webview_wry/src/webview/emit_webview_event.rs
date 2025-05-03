@@ -2,8 +2,12 @@ use crate::webview::WryWebViews;
 use bevy::prelude::*;
 use serde::Serialize;
 
+/// This structure is used to send events to the webview.
+///
+/// This event is sent via [`Trigger`].
+/// If the target of the trigger is not specified, the event will be sent to all webviews.
 #[derive(Event)]
-pub struct EmitEventToWebview {
+pub struct EmitIpcEvent {
     /// The event id
     pub id: String,
 
@@ -32,7 +36,7 @@ impl Plugin for EventEmitterPlugin {
 }
 
 fn apply_emit_event(
-    trigger: Trigger<EmitEventToWebview>,
+    trigger: Trigger<EmitIpcEvent>,
     webviews: Query<(Entity, &Name)>,
     wry_webviews: NonSend<WryWebViews>,
 ) {
@@ -49,7 +53,7 @@ fn apply_emit_event(
 
 fn call_javascript_callback(
     webview_entity: Entity,
-    event: &EmitEventToWebview,
+    event: &EmitIpcEvent,
     webviews: &Query<(Entity, &Name)>,
     wry_webviews: &WryWebViews,
 ) {

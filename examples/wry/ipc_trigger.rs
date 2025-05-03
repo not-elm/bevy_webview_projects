@@ -14,7 +14,7 @@ fn main() {
         .add_plugins((
             DefaultPlugins,
             WebviewWryPlugin {
-                local_root: PathBuf::from("ui").join("event_listen")
+                local_root: PathBuf::from("ui").join("ipc_trigger")
             }
         ))
         .add_ipc_trigger::<MessageFromWebview>("message")
@@ -38,5 +38,5 @@ struct MessageFromWebview {
 fn apply_webview_message(
     trigger: Trigger<MessageFromWebview>,
 ) {
-    info!("webview message: {}", trigger.message);
+    info!("message from webview: {}", trigger.message);
 }

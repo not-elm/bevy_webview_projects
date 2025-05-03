@@ -13,7 +13,7 @@ fn main() {
             DefaultPlugins,
             AllWebWindowPlugins,
             WebviewWryPlugin {
-                local_root: PathBuf::from("ui").join("event_emit")
+                local_root: PathBuf::from("ui").join("emit_event_to_webview")
             }
         ))
         .insert_resource(CountTimer(Timer::new(Duration::from_secs(1), TimerMode::Repeating)))
@@ -41,7 +41,7 @@ fn emit_event(
 ) {
     if timer.0.tick(time.delta()).finished() {
         *count += 1;
-        commands.trigger(EmitEventToWebview {
+        commands.trigger(EmitIpcEvent {
             id: "count_event".to_string(),
             payload: EventPayload::new(serde_json::json!({
                 "count" : *count

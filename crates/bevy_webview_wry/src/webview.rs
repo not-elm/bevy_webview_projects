@@ -32,7 +32,7 @@ mod protocol;
 pub mod prelude {
     pub use crate::webview::{
         emit_webview_event::{
-            EmitEventToWebview,
+            EmitIpcEvent,
             EventPayload,
         },
         handlers::prelude::*,
