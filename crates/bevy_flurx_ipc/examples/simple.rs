@@ -1,5 +1,6 @@
 //! This example demonstrates how to use `bevy_flurx_ipc`.
 
+use bevy::log::LogPlugin;
 use bevy::prelude::*;
 use bevy_flurx::prelude::*;
 use bevy_flurx_ipc::prelude::*;
@@ -11,6 +12,7 @@ fn main() {
     App::new()
         .add_plugins((
             MinimalPlugins,
+            LogPlugin::default(),
             FlurxPlugin,
             FlurxIpcPlugin,
         ))

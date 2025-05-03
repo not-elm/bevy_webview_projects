@@ -50,6 +50,7 @@ rfd = { version = "0.15", default-features = false, features = ["gtk3"] }
 
 [dev-dependencies]
 bevy = "0.16"
+bevy_flurx = "0.11"
 bevy_flurx_ipc = { path = "../bevy_flurx_ipc" }
 serde = { workspace = true }
 serde_json = { workspace = true }

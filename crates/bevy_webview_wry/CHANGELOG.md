@@ -1,6 +1,13 @@
 ## Unreleased
 
-## Features
+### Breaking Changes
+
+- Replaced EventReader‑based event handling from the webView with triggers.
+    - examples: [./examples/ipc_trigger.rs](./examples/ipc_trigger.rs)
+- Replaced the event‑sending mechanism to the ebView from an EwentEmitter to triggers.
+    - examples: [./examples/emit_event_to_webview.rs](./examples/emit_event_to_webview.rs)
+
+### Features
 
 - Upgrade bevy's version to v0.16.0
 
