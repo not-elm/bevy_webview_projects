@@ -24,21 +24,18 @@ pub struct IpcTriggerSender(Arc<Mutex<Vec<IpcTriggerMessage>>>);
 impl IpcTriggerSender {
     /// Push the [`IpcTriggerMessage`] into queue.
     ///
-    /// The pushed event will be deserialized, and then will send as [`IpcEvent`].
+    /// The message pushed will be deserialized into the type registered with [`IpcTriggerExt::add_ipc_trigger`].
     #[inline(always)]
     pub fn send(&self, event: IpcTriggerMessage) {
         self.0.lock().unwrap().push(event);
     }
 }
 
-/// Add an [`IpcEvent`] into [`App`].
+/// Allows you to receive messages from Ipc as [`Trigger`](bevy::prelude::Trigger).
 pub trait IpcTriggerExt {
-    /// This method registers [`IpcEvent<Payload>`](IpcEvent), which can be read just like a normal bevy event.
+    /// This method allows you to receive messages from Ipc as [`Trigger`](bevy::prelude::Trigger).
     ///
     /// `event_id` is the id that associated with this event.
-    ///
-    /// From javascript side, you can emit the event as follows:
-    /// `window.__FLURX__.emit(<event_id>, payload)`
     fn add_ipc_trigger<Payload>(&mut self, event_id: impl Into<String>) -> &mut Self
     where
         Payload: DeserializeOwned + Event + Send + Sync + 'static;
