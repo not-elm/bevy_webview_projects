@@ -1,4 +1,4 @@
-//! This Example show how to listen the [`IpcEvent`].
+//! This Example show how to listen the message from webview.
 //!
 //! Logs out messages emitted from text boxes.
 
