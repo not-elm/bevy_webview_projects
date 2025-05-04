@@ -50,6 +50,7 @@ impl IpcTriggerExt for App {
         P: DeserializeOwned + Event + Send + Sync + 'static,
     {
         let event_id = event_id.into();
+        self.add_event::<P>();
         self.add_systems(PreUpdate, read_receive_ipc_event_from_webview::<P>(event_id).before(cleanup_ipc_trigger_sender));
         self
     }
@@ -78,13 +79,17 @@ where
             return;
         };
         for message in messages.iter().filter(|m| m.event_id == event_id) {
-            let Ok(payload) = serde_json::from_str::<Payload>(&message.payload)  else {
+            let Ok(p1) = serde_json::from_str::<Payload>(&message.payload)  else {
                 continue;
             };
+            let Ok(p2) = serde_json::from_str::<Payload>(&message.payload)  else {
+                continue;
+            };
+            commands.send_event(p1);
             if let Some(target) = message.target {
-                commands.entity(target).trigger(payload);
+                commands.entity(target).trigger(p2);
             } else {
-                commands.trigger(payload);
+                commands.trigger(p2);
             }
         }
     }

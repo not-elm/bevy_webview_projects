@@ -33,7 +33,7 @@ impl Plugin for GripZonePlugin {
             .add_observer(apply_drag_end);
 
         #[cfg(target_os = "linux")]
-        app.add_ipc_event::<OnGribDrag>("FLURX|grip::drag");
+        app.add_ipc_trigger::<OnGribDrag>("FLURX|grip::drag");
     }
 }
 
@@ -57,7 +57,7 @@ struct MouseDelta<'w, 's> {
     /// I was testing on Ubuntu 24.04 ARM64 in Parallels, but `MouseMotion` was getting clearly abnormal coordinates,
     /// so I switched to getting delta from webview.
     #[cfg(target_os = "linux")]
-    er: EventReader<'w, 's, IpcEvent<OnGribDrag>>,
+    er: EventReader<'w, 's, OnGribDrag>,
 }
 
 impl MouseDelta<'_, '_> {
@@ -76,7 +76,7 @@ impl MouseDelta<'_, '_> {
             .er
             .read()
             .map(|event| {
-                Vec2::new(event.payload.x, event.payload.y)
+                Vec2::new(event.x, event.y)
             })
             .reduce(|d1, d2| d1 + d2)
     }
@@ -132,7 +132,7 @@ struct OnGripGrab {
 }
 
 #[cfg(target_os = "linux")]
-#[derive(Deserialize)]
+#[derive(Deserialize, Event)]
 struct OnGribDrag {
     x: f32,
     y: f32,
