@@ -2,9 +2,9 @@
 
 ### Breaking Changes
 
-- Replaced EventReader‑based event handling from the webView with triggers.
+- Changed the way to send events rom the webview to Bevy: now uses Trigger instead of EventReader
     - examples: [./examples/ipc_trigger.rs](./examples/ipc_trigger.rs)
-- Replaced the event‑sending mechanism to the ebView from an EwentEmitter to triggers.
+- Changed the way to send events from Bevy to the webview: now uses Trigger instead of EventEmitter
     - examples: [./examples/emit_event_to_webview.rs](./examples/emit_event_to_webview.rs)
 
 ### Features
