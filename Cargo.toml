@@ -2,7 +2,6 @@
 resolver = "2"
 members = [
     "crates/*",
-    "examples/*",
 ]
 exclude = [
     "tool",
@@ -13,7 +12,7 @@ version = "0.3.0"
 authors = ["notelm <elmprograminfo@gmail.com>"]
 repository = "https://github.com/not-elm/bevy_webview_projects"
 license = "MIT OR Apache-2.0"
-edition = "2021"
+edition = "2024"
 
 [workspace.dependencies]
 bevy = { version = "0.16", default-features = false }

@@ -58,8 +58,8 @@ There are two ways to create a webview:
 
 ### Converts an existing window into a webview window.
 
-[examples/wry/simple.rs](../../examples/wry/simple.rs)
-![simple](../../examples/wry/simple.gif)
+[examples/wry/simple.rs](examples/simple.rs)
+![simple](examples/simple.gif)
 
 ```rust
 fn spawn_webview(
@@ -79,13 +79,13 @@ This feature is required `child_window` feature flag.
 
 Please refer [here](https://github.com/not-elm/bevy_child_window) for supported platforms.
 
-[examples/wry/child_window.rs](../../examples/wry/child_window.rs)
-![child_window](../../examples/wry/child_window.gif)
+[examples/wry/child_window.rs](examples/child_window.rs)
+![child_window](examples/child_window.gif)
 
 ### Embedding Webview in a Window (Experimental)
 
-[examples/wry/embedding.rs](../../examples/wry/embedding.rs)
-![embedding](../../examples/wry/embedding.gif)
+[examples/wry/embedding.rs](examples/embedding.rs)
+![embedding](examples/embedding.gif)
 
 ## Ipc
 
@@ -95,7 +95,7 @@ You can listen events from the webview and, conversely, emit events to the webvi
 
 #### Webview(javascript) -> bevy
 
-[examples/wry/event_listen.rs](../../examples/wry/event_listen.rs)
+[examples/wry/event_listen.rs](examples/ipc_trigger.rs)
 
 ___javascript___
 
@@ -130,7 +130,7 @@ fn read_webview_message(
 
 #### bevy -> Webview(javascript)
 
-[examples/wry/event_emit.rs](../../examples/wry/event_emit.rs)
+[examples/wry/event_emit.rs](examples/emit_event_to_webview.rs)
 
 ___javascript___
 
@@ -168,7 +168,7 @@ In this case, `IpcCommand` can be used.
 
 `IpcComamnd` can be divided into two command patterns: action-command, task-command
 
-Please check  [examples/wry/ipc_command.rs](../../examples/wry/ipc_command.rs) for details.
+Please check  [examples/wry/ipc_command.rs](examples/ipc_command.rs) for details.
 
 ## ChangeLog
 

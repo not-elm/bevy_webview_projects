@@ -1,6 +1,13 @@
 ## Unreleased
 
-## Features
+### Breaking Changes
+
+- Changed the way to send events rom the webview to Bevy: now uses Trigger instead of EventReader
+    - examples: [./examples/ipc_trigger.rs](./examples/ipc_trigger.rs)
+- Changed the way to send events from Bevy to the webview: now uses Trigger instead of EventEmitter
+    - examples: [./examples/emit_event_to_webview.rs](./examples/emit_event_to_webview.rs)
+
+### Features
 
 - Upgrade bevy's version to v0.16.0
 

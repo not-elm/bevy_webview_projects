@@ -1,6 +1,6 @@
 //! Provides a mechanism to control the basic behavior of Webview.
 
-use crate::webview::event_emitter::EventEmitterPlugin;
+use crate::webview::emit_webview_event::EventEmitterPlugin;
 use crate::webview::handlers::WryHandlersPlugin;
 use crate::webview::ipc_resolve::IpcResolvePlugin;
 use crate::webview::load_webview::LoadWebviewPlugin;
@@ -10,7 +10,7 @@ use bevy::platform::collections::HashMap;
 use bevy::prelude::{App, Deref, DerefMut, Entity, Plugin};
 use bevy_flurx_ipc::FlurxIpcPlugin;
 
-mod event_emitter;
+mod emit_webview_event;
 pub mod handlers;
 mod ipc_resolve;
 mod load_webview;
@@ -31,6 +31,10 @@ mod protocol;
 #[allow(missing_docs)]
 pub mod prelude {
     pub use crate::webview::{
+        emit_webview_event::{
+            EmitIpcEvent,
+            EventPayload,
+        },
         handlers::prelude::*,
         WryWebViews,
     };

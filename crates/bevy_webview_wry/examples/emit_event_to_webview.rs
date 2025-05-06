@@ -13,7 +13,7 @@ fn main() {
             DefaultPlugins,
             AllWebWindowPlugins,
             WebviewWryPlugin {
-                local_root: PathBuf::from("ui").join("event_emit")
+                local_root: PathBuf::from("ui").join("emit_event_to_webview")
             }
         ))
         .insert_resource(CountTimer(Timer::new(Duration::from_secs(1), TimerMode::Repeating)))
@@ -34,17 +34,18 @@ fn spawn_webview(
 }
 
 fn emit_event(
+    mut commands: Commands,
     mut timer: ResMut<CountTimer>,
-    mut views: Query<&mut EventEmitter>,
     mut count: Local<usize>,
     time: Res<Time>,
 ) {
     if timer.0.tick(time.delta()).finished() {
         *count += 1;
-        for mut emitter in views.iter_mut() {
-            emitter.emit("count_event", serde_json::json!({
+        commands.trigger(EmitIpcEvent {
+            id: "count_event".to_string(),
+            payload: EventPayload::new(serde_json::json!({
                 "count" : *count
-            }));
-        }
+            })),
+        });
     }
 }

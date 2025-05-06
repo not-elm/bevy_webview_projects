@@ -5,21 +5,21 @@
 //! Its provides a mechanism similar to coroutines, making it easy to implement asynchronous communication.
 
 use crate::ipc_commands::FlurxIpcCommandPlugin;
-use crate::prelude::FlurxIpcEventPlugin;
+use crate::prelude::IpcTriggerPlugin;
 use bevy::prelude::{App, Plugin};
 use bevy_flurx::FlurxPlugin;
 pub use bevy_flurx_ipc_macro::command;
 
 pub mod component;
 pub mod ipc_commands;
-pub mod ipc_events;
+pub mod ipc_trigger;
 
 #[allow(missing_docs)]
 pub mod prelude {
     pub use crate::{
         component::*,
         ipc_commands::*,
-        ipc_events::*,
+        ipc_trigger::*,
         FlurxIpcPlugin,
     };
     pub use bevy_flurx_ipc_macro::command;
@@ -43,7 +43,7 @@ impl Plugin for FlurxIpcPlugin {
 
         app.add_plugins((
             FlurxIpcCommandPlugin,
-            FlurxIpcEventPlugin
+            IpcTriggerPlugin
         ));
     }
 }

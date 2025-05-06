@@ -8,7 +8,7 @@ use bevy::input::common_conditions::input_just_released;
 use bevy::input::mouse::MouseMotion;
 use bevy::prelude::*;
 use bevy::winit::WinitWindows;
-use bevy_flurx_ipc::ipc_events::{IpcEvent, IpcEventExt};
+use bevy_flurx_ipc::ipc_trigger::IpcTriggerExt;
 use bevy_webview_core::bundle::embedding::{Bounds, EmbedWithin};
 use serde::Deserialize;
 use wry::raw_window_handle::HasWindowHandle;
@@ -22,18 +22,18 @@ pub struct GripZonePlugin;
 impl Plugin for GripZonePlugin {
     fn build(&self, app: &mut App) {
         app
-            .add_ipc_event::<OnGripGrab>("FLURX|grip::grab")
-            .add_ipc_event::<OnGripRelease>("FLURX|grip::release")
+            .add_ipc_trigger::<OnGripGrab>("FLURX|grip::grab")
+            .add_ipc_trigger::<OnGripRelease>("FLURX|grip::release")
             .add_systems(Update, (
-                drag_start.run_if(on_event::<IpcEvent<OnGripGrab>>),
                 drag.run_if(any_with_component::<CurrentMoving>),
-                drag_end.run_if(any_with_component::<CurrentMoving>),
                 resize_grip_zone,
                 all_remove_current_moving.run_if(input_just_released(MouseButton::Left).or(on_event::<DragEntered>)),
-            ).run_if(any_with_component::<GripZone>));
+            ).run_if(any_with_component::<GripZone>))
+            .add_observer(apply_drag_start)
+            .add_observer(apply_drag_end);
 
         #[cfg(target_os = "linux")]
-        app.add_ipc_event::<OnGribDrag>("FLURX|grip::drag");
+        app.add_ipc_trigger::<OnGribDrag>("FLURX|grip::drag");
     }
 }
 
@@ -57,7 +57,7 @@ struct MouseDelta<'w, 's> {
     /// I was testing on Ubuntu 24.04 ARM64 in Parallels, but `MouseMotion` was getting clearly abnormal coordinates,
     /// so I switched to getting delta from webview.
     #[cfg(target_os = "linux")]
-    er: EventReader<'w, 's, IpcEvent<OnGribDrag>>,
+    er: EventReader<'w, 's, OnGribDrag>,
 }
 
 impl MouseDelta<'_, '_> {
@@ -76,7 +76,7 @@ impl MouseDelta<'_, '_> {
             .er
             .read()
             .map(|event| {
-                Vec2::new(event.payload.x, event.payload.y)
+                Vec2::new(event.x, event.y)
             })
             .reduce(|d1, d2| d1 + d2)
     }
@@ -125,37 +125,36 @@ fn move_bounds(
     bounds.position = (bounds.position + new_pos).min(max_pos).max(max);
 }
 
-#[derive(Deserialize)]
+#[derive(Deserialize, Event)]
 struct OnGripGrab {
     x: f32,
     y: f32,
 }
 
 #[cfg(target_os = "linux")]
-#[derive(Deserialize)]
+#[derive(Deserialize, Event)]
 struct OnGribDrag {
     x: f32,
     y: f32,
 }
 
-fn drag_start(
-    mut er: EventReader<IpcEvent<OnGripGrab>>,
+fn apply_drag_start(
+    trigger: Trigger<OnGripGrab>,
     mut commands: Commands,
     wry_webviews: NonSend<WryWebViews>,
     winit_windows: NonSend<WinitWindows>,
     webviews: Query<&EmbedWithin>,
 ) {
-    for event in er.read() {
-        let Ok(EmbedWithin(window_entity)) = webviews.get(event.webview_entity) else {
-            continue;
-        };
+    let webview_entity = trigger.target();
+    let Ok(EmbedWithin(window_entity)) = webviews.get(webview_entity) else {
+        return;
+    };
 
-        commands
-            .entity(event.webview_entity)
-            .insert(CurrentMoving(Vec2::new(event.payload.x, event.payload.y)));
+    commands
+        .entity(webview_entity)
+        .insert(CurrentMoving(Vec2::new(trigger.x, trigger.y)));
 
-        bring_to_front(event.webview_entity, window_entity, &wry_webviews, &winit_windows);
-    }
+    bring_to_front(webview_entity, window_entity, &wry_webviews, &winit_windows);
 }
 
 fn bring_to_front(
@@ -190,15 +189,17 @@ fn bring_to_front(
 }
 
 #[allow(non_snake_case)]
-#[derive(Deserialize)]
+#[derive(Deserialize, Event)]
 struct OnGripRelease {
     __FLURX__grip_release: u8,
 }
 
-fn drag_end(mut er: EventReader<IpcEvent<OnGripRelease>>, mut commands: Commands) {
-    for IpcEvent { webview_entity, .. } in er.read() {
-        commands.entity(*webview_entity).remove::<CurrentMoving>();
-    }
+fn apply_drag_end(
+    trigger: Trigger<OnGripRelease>,
+    mut commands: Commands,
+) {
+    let webview_entity = trigger.target();
+    commands.entity(webview_entity).remove::<CurrentMoving>();
 }
 
 #[cfg(test)]

@@ -23,7 +23,8 @@ serde_json = { workspace = true }
 
 [dev-dependencies]
 trybuild = "1"
-bevy = { workspace = true }
+bevy = { workspace = true, features = ["bevy_log"] }
+bevy_test_helper = { git = "https://github.com/not-elm/bevy_test_helper", branch = "v0.16" }
 
 [lints]
 workspace = true

@@ -1,4 +1,4 @@
-//! This Example show how to listen the [`IpcEvent`].
+//! This Example show how to listen the message from webview.
 //!
 //! Logs out messages emitted from text boxes.
 
@@ -14,12 +14,12 @@ fn main() {
         .add_plugins((
             DefaultPlugins,
             WebviewWryPlugin {
-                local_root: PathBuf::from("ui").join("event_listen")
+                local_root: PathBuf::from("ui").join("ipc_trigger")
             }
         ))
-        .add_ipc_event::<MessageFromWebview>("message")
+        .add_ipc_trigger::<MessageFromWebview>("message")
         .add_systems(Startup, spawn_webview)
-        .add_systems(Update, read_webview_message)
+        .add_observer(apply_webview_message)
         .run();
 }
 
@@ -30,15 +30,13 @@ fn spawn_webview(
     commands.entity(window.single().expect("Window wasn't found")).insert(Webview::default());
 }
 
-#[derive(Deserialize, Debug)]
+#[derive(Deserialize, Debug, Event)]
 struct MessageFromWebview {
     message: String,
 }
 
-fn read_webview_message(
-    mut er: EventReader<IpcEvent<MessageFromWebview>>
+fn apply_webview_message(
+    trigger: Trigger<MessageFromWebview>,
 ) {
-    for e in er.read() {
-        info!("webview message: {}", e.payload.message);
-    }
+    info!("message from webview: {}", trigger.message);
 }

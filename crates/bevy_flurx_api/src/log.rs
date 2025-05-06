@@ -1,10 +1,8 @@
 //! Provides mechanism to output the logs.
 
-use bevy::app::Update;
 use bevy::log;
-use bevy::prelude::{App, EventReader, Plugin};
-use bevy_flurx_ipc::ipc_events::IpcEventExt;
-use bevy_flurx_ipc::prelude::IpcEvent;
+use bevy::prelude::{App, Event, Plugin, Trigger};
+use bevy_flurx_ipc::ipc_trigger::IpcTriggerExt;
 use serde::Deserialize;
 
 /// You will be able to output a massage to the console of the aa process.
@@ -19,21 +17,19 @@ pub struct AllLogPlugins;
 impl Plugin for AllLogPlugins {
     fn build(&self, app: &mut App) {
         app
-            .add_ipc_event::<RequestPrintln>("FLURX|log::println")
-            .add_ipc_event::<RequestLog>("FLURX|log::log")
-            .add_systems(Update, (
-                println_event,
-                log_event,
-            ));
+            .add_ipc_trigger::<RequestPrintln>("FLURX|log::println")
+            .add_ipc_trigger::<RequestLog>("FLURX|log::log")
+            .add_observer(apply_println_api)
+            .add_observer(apply_log_api);
     }
 }
 
-#[derive(Deserialize)]
+#[derive(Deserialize, Event)]
 struct RequestPrintln {
     message: String,
 }
 
-#[derive(Deserialize)]
+#[derive(Deserialize, Event)]
 struct RequestLog {
     message: String,
     level: RequestLogLevel,
@@ -49,21 +45,17 @@ enum RequestLogLevel {
     Error,
 }
 
-fn println_event(mut er: EventReader<IpcEvent<RequestPrintln>>) {
-    for event in er.read() {
-        println!("{}", event.payload.message);
-    }
+fn apply_println_api(trigger: Trigger<RequestPrintln>) {
+    println!("{}", trigger.message);
 }
 
-fn log_event(mut er: EventReader<IpcEvent<RequestLog>>) {
-    for event in er.read() {
-        let message = &event.payload.message;
-        match event.payload.level {
-            RequestLogLevel::Trace => log::trace!(message),
-            RequestLogLevel::Debug => log::debug!(message),
-            RequestLogLevel::Info => log::info!(message),
-            RequestLogLevel::Warn => log::warn!(message),
-            RequestLogLevel::Error => log::error!(message),
-        }
+fn apply_log_api(trigger: Trigger<RequestLog>) {
+    let message = &trigger.message;
+    match trigger.level {
+        RequestLogLevel::Trace => log::trace!(message),
+        RequestLogLevel::Debug => log::debug!(message),
+        RequestLogLevel::Info => log::info!(message),
+        RequestLogLevel::Warn => log::warn!(message),
+        RequestLogLevel::Error => log::error!(message),
     }
 }
