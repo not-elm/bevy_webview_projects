@@ -31,10 +31,10 @@ Add this to your `Cargo.toml`:
 
 ```toml
 [dependencies]
-bevy_webview_wry = { version = "0.3", features = ["api"] }
+bevy_webview_wry = { version = "0.4", features = ["api"] }
 
 # necessary if you want to use ipc-command.
-bevy_flurx = "0.9"
+bevy_flurx = "0.11"
 ```
 
 ### Ui process(webview)
@@ -58,7 +58,7 @@ There are two ways to create a webview:
 
 ### Converts an existing window into a webview window.
 
-[examples/wry/simple.rs](examples/simple.rs)
+[examples/simple.rs](./examples/simple.rs)
 ![simple](examples/simple.gif)
 
 ```rust
@@ -79,7 +79,7 @@ This feature is required `child_window` feature flag.
 
 Please refer [here](https://github.com/not-elm/bevy_child_window) for supported platforms.
 
-[examples/wry/child_window.rs](examples/child_window.rs)
+[examples/child_window.rs](./examples/child_window.rs)
 ![child_window](examples/child_window.gif)
 
 ### Embedding Webview in a Window (Experimental)
@@ -89,86 +89,21 @@ Please refer [here](https://github.com/not-elm/bevy_child_window) for supported 
 
 ## Ipc
 
-### IpcEvent
+### IpcTrigger
 
-You can listen events from the webview and, conversely, emit events to the webview.
+You can listen to messages from the webview as a trigger.
 
-#### Webview(javascript) -> bevy
+[examples/event_listen.rs](./examples/ipc_trigger.rs)
 
-[examples/wry/event_listen.rs](examples/ipc_trigger.rs)
+### Emit event to webview
 
-___javascript___
-
-```javascript
-// you can use any type.
-const event = {
-    message: "message"
-};
-window.__FLURX__.emit("event_id", event);
-```
-
-___rust___
-
-```rust
-use bevy::prelude::*;
-use bevy_webview_wry::prelude::*;
-use serde::Deserialize;
-
-#[derive(Deserialize, Debug)]
-struct MessageFromWebview {
-    message: String,
-}
-
-fn read_webview_message(
-    mut er: EventReader<IpcEvent<MessageFromWebview>>
-) {
-    for e in er.read() {
-        info!("webview message: {}", e.payload.message);
-    }
-}
-```
-
-#### bevy -> Webview(javascript)
-
-[examples/wry/event_emit.rs](examples/emit_event_to_webview.rs)
-
-___javascript___
-
-```javascript
-const webviewWindow = window.__FLURX__.WebWindow.current()
-webviewWindow.listen("count_event", (event) => {
-    console.log(event);
-});
-```
-
-___rust___
-
-```rust
-fn emit_event(
-    mut timer: ResMut<CountTimer>,
-    mut views: Query<&mut EventEmitter>,
-    mut count: Local<usize>,
-    time: Res<Time>,
-) {
-    if timer.0.tick(time.delta()).finished() {
-        *count += 1;
-        for mut emitter in views.iter_mut() {
-            emitter.emit("count_event", serde_json::json!({
-                "count" : *count
-            }));
-        }
-    }
-}
-```
+[examples/emit_event_to_webview.rs](./examples/emit_event_to_webview.rs)
 
 ### IpcCommand
 
-`IpcEvent` can't receive the output value from the other side.
-In this case, `IpcCommand` can be used.
-
 `IpcComamnd` can be divided into two command patterns: action-command, task-command
 
-Please check  [examples/wry/ipc_command.rs](examples/ipc_command.rs) for details.
+Please check  [examples/ipc_command.rs](./examples/ipc_command.rs) for details.
 
 ## ChangeLog
 
@@ -185,6 +120,7 @@ Please see [here](https://github.com/not-elm/bevy_webview_wry/blob/main/CHANGELO
 
 | bevy_webview_wry | bevy_flurx | bevy |
 |------------------|------------|------|
+| 0.4.0 ~          | 0.11       | 0.16 |
 | 0.1.0 ~          | 0.9        | 0.15 |
 
 ## License
