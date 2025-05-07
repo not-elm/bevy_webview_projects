@@ -17,11 +17,11 @@ edition = "2024"
 [workspace.dependencies]
 bevy = { version = "0.16", default-features = false }
 bevy_flurx = { version = "0.11" }
-bevy_flurx_ipc = { path = "crates/bevy_flurx_ipc", version = "0.3" }
-bevy_flurx_ipc_macro = { path = "crates/bevy_flurx_ipc_macro", version = "0.3" }
-bevy_webview_core = { path = "crates/bevy_webview_core", version = "0.3" }
-bevy_webview_wry = { path = "crates/bevy_webview_wry", version = "0.3" }
-bevy_flurx_api = { path = "crates/bevy_flurx_api", version = "0.3" }
+bevy_flurx_ipc = { path = "crates/bevy_flurx_ipc", version = "0.4" }
+bevy_flurx_ipc_macro = { path = "crates/bevy_flurx_ipc_macro", version = "0.4" }
+bevy_webview_core = { path = "crates/bevy_webview_core", version = "0.4" }
+bevy_webview_wry = { path = "crates/bevy_webview_wry", version = "0.4" }
+bevy_flurx_api = { path = "crates/bevy_flurx_api", version = "0.4" }
 serde = { version = "1", features = ["derive"] }
 serde_json = "1"
 
