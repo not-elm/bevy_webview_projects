@@ -1,11 +1,13 @@
 use bevy::log::error;
+use bevy::prelude::Entity;
 use wry::WebViewBuilder;
 
-use crate::WryLocalRoot;
 use crate::prelude::{Csp, Webview};
 use crate::webview::protocol::{WryRequest, WryRequestSender};
+use crate::WryLocalRoot;
 
 pub fn feed_uri<'a>(
+    webview_entity: Entity,
     builder: WebViewBuilder<'a>,
     webview: &Webview,
     local_root: &WryLocalRoot,
@@ -16,10 +18,11 @@ pub fn feed_uri<'a>(
         Webview::Uri(uri) => builder.with_url(&uri.0),
         Webview::Html(html) => builder.with_html(html),
     };
-    feed_custom_protocol(builder, local_root.clone(), csp, request_sender)
+    feed_custom_protocol(webview_entity, builder, local_root.clone(), csp, request_sender)
 }
 
 fn feed_custom_protocol(
+    webview_entity: Entity,
     builder: WebViewBuilder,
     local_root: WryLocalRoot,
     csp: Option<Csp>,
@@ -34,6 +37,7 @@ fn feed_custom_protocol(
             &path[1..]
         };
         if let Err(e) = request_sender.0.send(WryRequest {
+            webview: webview_entity,
             responder,
             path: local_root.join(path),
             csp: csp.clone(),
