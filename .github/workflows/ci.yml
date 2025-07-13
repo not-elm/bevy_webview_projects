@@ -23,6 +23,7 @@ jobs:
       - uses: dtolnay/rust-toolchain@master
         with:
           toolchain: stable
+
       - name: Install alsa and udev
         run: |
           sudo apt-get update && sudo apt-get install --no-install-recommends libasound2-dev \
@@ -33,10 +34,17 @@ jobs:
             libudev-dev \
             libssl-dev \
             build-essential \
-            libxdo-dev
+            libxdo-dev \ 
+            libwebkit2gtk-4.0-dev \
+            libgtk-3-dev
         if: runner.os == 'linux'
+
       - name: Build & run tests
-        run: cargo test -- --test-threads 3
+        if: runner.os != 'linux'
+        run: cargo test
+      - name: Build & run tests(Linux)
+        if: runner.os == 'linux'
+        run: xvfb-run -a cargo test
   all-doc-tests:
     runs-on: ubuntu-latest
     steps:
@@ -63,7 +71,9 @@ jobs:
             libudev-dev \
             libssl-dev \
             build-essential \
-            libxdo-dev
+            libxdo-dev \ 
+            libwebkit2gtk-4.0-dev \
+            libgtk-3-dev
       - name: Run doc tests with all features (this also compiles README examples)
         run: cargo test --doc --all-features
   lint:
@@ -93,7 +103,9 @@ jobs:
             libudev-dev \
             libssl-dev \
             build-essential \
-            libxdo-dev
+            libxdo-dev \
+            libwebkit2gtk-4.0-dev \
+            libgtk-3-dev
       - name: Run clippy
         run: cargo clippy --workspace --all-targets --all-features -- -Dwarnings
       - name: Run clippy
