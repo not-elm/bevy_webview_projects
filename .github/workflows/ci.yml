@@ -52,7 +52,7 @@ jobs:
         run: cargo +stable clippy --all --all-features --tests -- -D warnings
 
       - name: Test all features
-        run: cargo +nightly test --all-features --all
+        run: cargo +stable test --all-features --all
 
       - name: Doc lint
         run: cargo +nightly doc --all-features --no-deps
