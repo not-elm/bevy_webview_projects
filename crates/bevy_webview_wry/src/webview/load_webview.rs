@@ -1,12 +1,12 @@
+use crate::WryLocalRoot;
 use crate::prelude::{Csp, Webview};
 use crate::prelude::{InitializationScripts, WebviewInitialized};
 use crate::util::as_wry_rect;
+use crate::webview::WryWebViews;
 use crate::webview::handlers::{HandlerQueries, WryEventParams};
 use crate::webview::load_webview::ipc::IpcHandlerParams;
 use crate::webview::load_webview::protocol::feed_uri;
 use crate::webview::protocol::WryRequestSender;
-use crate::webview::WryWebViews;
-use crate::WryLocalRoot;
 use bevy::prelude::{
     App, Commands, Entity, Name, NonSend, NonSendMut, Or, Plugin, PreUpdate, Query, Res, Window,
     With, Without,
@@ -35,7 +35,7 @@ impl Plugin for LoadWebviewPlugin {
             app.add_systems(
                 PreUpdate,
                 (resize_webview_inner_window
-                     .run_if(bevy::prelude::on_event::<bevy::window::WindowResized>),),
+                    .run_if(bevy::prelude::on_event::<bevy::window::WindowResized>),),
             );
         }
     }
@@ -192,7 +192,14 @@ fn feed_configs2<'a>(
         builder = builder.with_user_agent(user_agent);
     }
 
-    feed_uri(entity, builder, uri, local_root, csp.cloned(), request_sender)
+    feed_uri(
+        entity,
+        builder,
+        uri,
+        local_root,
+        csp.cloned(),
+        request_sender,
+    )
 }
 
 fn initialization_script(

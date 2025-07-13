@@ -2,7 +2,7 @@ mod asset;
 
 use crate::prelude::WryWebViews;
 use crate::webview::protocol::asset::{
-    convert_to_response, WryRequestArgs, WryResponseBody, WryResponseHandle, WryResponseLoader,
+    WryRequestArgs, WryResponseBody, WryResponseHandle, WryResponseLoader, convert_to_response,
 };
 use bevy::app::{App, Plugin};
 use bevy::platform::collections::hash_map::HashMap;
@@ -69,7 +69,7 @@ fn start_load(
 
 fn response(
     mut commands: Commands,
-    mut responses: ResMut<Assets<WryResponseBody>>,
+    responses: ResMut<Assets<WryResponseBody>>,
     mut handles: Query<(Entity, &WryRequestArgs, &WryResponseHandle)>,
     mut map: NonSendMut<WryResponseMap>,
 ) {
@@ -91,11 +91,11 @@ fn hot_reload(
     webviews: Query<(Entity, &WryResponseHandle)>,
 ) {
     for event in er.read() {
-        if let AssetEvent::Modified { id } = event &&
-            let Some(webview_entity) = webviews.iter().find_map(|(entity, handle)| {
-                (id == &handle.0.id()).then_some(entity)
-            }) &&
-            let Some(webview) = wry_webviews.get(&webview_entity)
+        if let AssetEvent::Modified { id } = event
+            && let Some(webview_entity) = webviews
+                .iter()
+                .find_map(|(entity, handle)| (id == &handle.0.id()).then_some(entity))
+            && let Some(webview) = wry_webviews.get(&webview_entity)
         {
             if let Err(e) = webview.reload() {
                 warn!("Failed to reload webview {webview_entity}: {e}");
