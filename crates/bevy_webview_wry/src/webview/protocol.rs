@@ -1,8 +1,7 @@
 mod asset;
 
-use crate::prelude::WryWebViews;
 use crate::webview::protocol::asset::{
-    WryRequestArgs, WryResponseBody, WryResponseHandle, WryResponseLoader, convert_to_response,
+    convert_to_response, WryRequestArgs, WryResponseBody, WryResponseHandle, WryResponseLoader,
 };
 use bevy::app::{App, Plugin};
 use bevy::platform::collections::hash_map::HashMap;
@@ -28,6 +27,7 @@ impl Plugin for CustomProtocolPlugin {
                 (
                     start_load,
                     response.run_if(any_with_component::<WryResponseHandle>),
+                    #[cfg(feature = "hot-reload")]
                     hot_reload.run_if(on_event::<AssetEvent<WryResponseBody>>),
                 ),
             );
@@ -85,9 +85,10 @@ fn response(
     }
 }
 
+#[cfg(feature = "hot-reload")]
 fn hot_reload(
     mut er: EventReader<AssetEvent<WryResponseBody>>,
-    wry_webviews: NonSend<WryWebViews>,
+    wry_webviews: NonSend<crate::prelude::WryWebViews>,
     webviews: Query<(Entity, &WryResponseHandle)>,
 ) {
     for event in er.read() {
