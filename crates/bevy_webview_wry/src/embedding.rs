@@ -7,8 +7,8 @@ use grip_zone::GripZonePlugin;
 use resize::ResizePlugin;
 use serde::{Deserialize, Serialize};
 
-mod resize;
 mod grip_zone;
+mod resize;
 
 #[allow(missing_docs)]
 pub mod prelude {
@@ -20,17 +20,11 @@ pub(crate) struct EmbeddingWebviewPlugin;
 
 impl Plugin for EmbeddingWebviewPlugin {
     fn build(&self, app: &mut App) {
-        app
-            .register_type::<CurrentMoving>()
-            .add_plugins((
-                ResizePlugin,
-                GripZonePlugin,
-            ));
+        app.register_type::<CurrentMoving>()
+            .add_plugins((ResizePlugin, GripZonePlugin));
     }
 }
 
 #[derive(Component, Reflect, Serialize, Deserialize)]
 #[reflect(Component, Serialize, Deserialize)]
 struct CurrentMoving(pub Vec2);
-
-

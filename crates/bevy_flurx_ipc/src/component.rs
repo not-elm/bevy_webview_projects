@@ -2,7 +2,9 @@
 
 use crate::ipc_commands::IpcCommand;
 use bevy::platform::collections::HashMap;
-use bevy::prelude::{Commands, Component, Entity, Reflect, ReflectComponent, ReflectDeserialize, ReflectSerialize};
+use bevy::prelude::{
+    Commands, Component, Entity, Reflect, ReflectComponent, ReflectDeserialize, ReflectSerialize,
+};
 use serde::{Deserialize, Serialize};
 
 /// The ipc invoke handlers.
@@ -28,7 +30,7 @@ impl IpcHandlers {
     ///
     /// IpcHandlers::new([hello]);
     /// ```
-    pub fn new<H>(handlers: impl IntoIterator<Item=H>) -> Self
+    pub fn new<H>(handlers: impl IntoIterator<Item = H>) -> Self
     where
         H: Into<IpcHandler>,
     {
@@ -77,14 +79,8 @@ impl IpcHandler {
     /// Create a new handler.
     ///
     /// The `id` is used when invoking from javascript.
-    pub fn new(
-        id: impl Into<String>,
-        f: IpcFn,
-    ) -> Self {
-        Self {
-            id: id.into(),
-            f,
-        }
+    pub fn new(id: impl Into<String>, f: IpcFn) -> Self {
+        Self { id: id.into(), f }
     }
 
     /// Returns the ipc-id.

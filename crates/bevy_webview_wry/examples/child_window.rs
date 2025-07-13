@@ -6,19 +6,12 @@ use bevy_webview_wry::prelude::*;
 
 fn main() {
     let mut app = App::new();
-    app
-        .add_plugins((
-            DefaultPlugins,
-            WebviewWryPlugin::default(),
-        ))
+    app.add_plugins((DefaultPlugins, WebviewWryPlugin::default()))
         .add_systems(Startup, spawn_child_window)
         .run();
 }
 
-fn spawn_child_window(
-    mut commands: Commands,
-    window: Query<Entity, With<PrimaryWindow>>,
-) {
+fn spawn_child_window(mut commands: Commands, window: Query<Entity, With<PrimaryWindow>>) {
     commands.spawn((
         Window {
             title: "Child Window".to_string(),
@@ -29,4 +22,3 @@ fn spawn_child_window(
         ParentWindow(window.single().expect("Parent window not found")),
     ));
 }
-

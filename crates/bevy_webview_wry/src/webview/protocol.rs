@@ -1,6 +1,8 @@
 mod asset;
 
-use crate::webview::protocol::asset::{convert_to_response, WryRequestArgs, WryResponseBody, WryResponseHandle, WryResponseLoader};
+use crate::webview::protocol::asset::{
+    WryRequestArgs, WryResponseBody, WryResponseHandle, WryResponseLoader, convert_to_response,
+};
 use bevy::app::{App, Plugin};
 use bevy::platform::collections::hash_map::HashMap;
 use bevy::prelude::*;
@@ -14,17 +16,19 @@ pub struct CustomProtocolPlugin;
 impl Plugin for CustomProtocolPlugin {
     fn build(&self, app: &mut App) {
         let (tx, rx) = std::sync::mpsc::channel();
-        app
-            .register_type::<WryRequestArgs>()
+        app.register_type::<WryRequestArgs>()
             .init_asset::<WryResponseBody>()
             .init_asset_loader::<WryResponseLoader>()
             .insert_non_send_resource(WryRequestReceiver(rx))
             .insert_non_send_resource(WryRequestSender(tx))
             .insert_non_send_resource(WryResponseMap(HashMap::default()))
-            .add_systems(Update, (
-                start_load,
-                response.run_if(any_with_component::<WryResponseHandle>),
-            ));
+            .add_systems(
+                Update,
+                (
+                    start_load,
+                    response.run_if(any_with_component::<WryResponseHandle>),
+                ),
+            );
     }
 }
 

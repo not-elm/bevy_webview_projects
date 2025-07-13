@@ -30,20 +30,12 @@ fn increment() -> ActionSeed<usize, usize> {
 }
 
 #[command]
-async fn increment_command(
-    In(n): In<usize>,
-    task: ReactorTask,
-) -> usize {
+async fn increment_command(In(n): In<usize>, task: ReactorTask) -> usize {
     task.will(Update, increment().with(n)).await
 }
 
-fn setup(
-    mut commands: Commands,
-    ipc_commands: Res<IpcCommands>,
-) {
-    let entity = commands.spawn(IpcHandlers::new([
-        increment_command,
-    ])).id();
+fn setup(mut commands: Commands, ipc_commands: Res<IpcCommands>) {
+    let entity = commands.spawn(IpcHandlers::new([increment_command])).id();
 
     // This time, threads are treated as other processes.
     let ipc_commands = ipc_commands.clone();
@@ -66,9 +58,7 @@ fn setup(
     });
 }
 
-fn resolve_event(
-    mut er: EventReader<IpcResolveEvent>
-) {
+fn resolve_event(mut er: EventReader<IpcResolveEvent>) {
     for e in er.read() {
         info!("Resolved: {:?}", e);
     }

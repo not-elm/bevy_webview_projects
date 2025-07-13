@@ -48,7 +48,8 @@ pub mod fs {
     pub(crate) struct NotPermittedPath;
 
     impl NotPermittedPath {
-        const MESSAGE: &'static str = "Try to access to any of specified files isn't permitted by the application. ";
+        const MESSAGE: &'static str =
+            "Try to access to any of specified files isn't permitted by the application. ";
     }
 
     impl Debug for NotPermittedPath {

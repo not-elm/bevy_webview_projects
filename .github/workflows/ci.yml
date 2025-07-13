@@ -23,7 +23,7 @@ jobs:
         with:
           toolchain: 'nightly'
           components: 'clippy,rust-docs'
-          
+
       - name: Install alsa and udev
         run: |
           sudo apt-get update && sudo apt-get install --no-install-recommends libasound2-dev \
@@ -48,3 +48,6 @@ jobs:
 
       - name: Doc lint
         run: cargo +nightly doc --all-features --no-deps
+
+      - name: Check format
+        run: cargo fmt --all -- --check

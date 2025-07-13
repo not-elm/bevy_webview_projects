@@ -5,12 +5,12 @@
 mod command;
 
 use crate::command::expand_call_fn;
-use darling::ast::NestedMeta;
 use darling::FromMeta;
+use darling::ast::NestedMeta;
 use proc_macro::TokenStream;
 use quote::quote;
-use syn::ItemFn;
 use syn::__private::TokenStream2;
+use syn::ItemFn;
 
 /// Convert the function to `bevy_flurx_ipc-command`.
 ///
@@ -103,4 +103,3 @@ fn parse_attribute(attr: TokenStream) -> Option<Attribute> {
 struct Attribute {
     id: Option<String>,
 }
-

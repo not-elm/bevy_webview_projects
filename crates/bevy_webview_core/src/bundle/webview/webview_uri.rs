@@ -17,7 +17,7 @@ use std::path::{Path, PathBuf};
 ///     .add_plugins((
 ///         DefaultPlugins,
 ///         WebviewWryPlugin{
-///             // local root will be flurx://localhost/ui. 
+///             // local root will be flurx://localhost/ui.
 ///             local_root: PathBuf::from("ui")
 ///         }
 ///     ))
@@ -51,7 +51,7 @@ use std::path::{Path, PathBuf};
     OnDownload,
     OnDragDrop,
     OnNavigation,
-    OnNewWindowRequest,
+    OnNewWindowRequest
 )]
 #[reflect(Component, Default, Serialize, Deserialize)]
 pub enum Webview {

@@ -11,24 +11,28 @@ use bevy::winit::WinitWindows;
 use bevy_flurx_ipc::ipc_trigger::IpcTriggerExt;
 use bevy_webview_core::bundle::embedding::{Bounds, EmbedWithin};
 use serde::Deserialize;
+#[cfg(target_os = "windows")]
+use wry::WebViewExtWindows;
 use wry::raw_window_handle::HasWindowHandle;
 #[cfg(any(target_os = "windows", target_os = "macos"))]
 use wry::raw_window_handle::RawWindowHandle;
-#[cfg(target_os = "windows")]
-use wry::WebViewExtWindows;
 
 pub struct GripZonePlugin;
 
 impl Plugin for GripZonePlugin {
     fn build(&self, app: &mut App) {
-        app
-            .add_ipc_trigger::<OnGripGrab>("FLURX|grip::grab")
+        app.add_ipc_trigger::<OnGripGrab>("FLURX|grip::grab")
             .add_ipc_trigger::<OnGripRelease>("FLURX|grip::release")
-            .add_systems(Update, (
-                drag.run_if(any_with_component::<CurrentMoving>),
-                resize_grip_zone,
-                all_remove_current_moving.run_if(input_just_released(MouseButton::Left).or(on_event::<DragEntered>)),
-            ).run_if(any_with_component::<GripZone>))
+            .add_systems(
+                Update,
+                (
+                    drag.run_if(any_with_component::<CurrentMoving>),
+                    resize_grip_zone,
+                    all_remove_current_moving
+                        .run_if(input_just_released(MouseButton::Left).or(on_event::<DragEntered>)),
+                )
+                    .run_if(any_with_component::<GripZone>),
+            )
             .add_observer(apply_drag_start)
             .add_observer(apply_drag_end);
 
@@ -43,7 +47,9 @@ fn resize_grip_zone(
 ) {
     for (entity, grip_zone) in webviews.iter() {
         if let Some(webview) = wry_webviews.0.get(&entity) {
-            if let Err(e) = webview.evaluate_script(&format!("window.__FLURX__.gripZoneHeight={}", grip_zone.0)) {
+            if let Err(e) =
+                webview.evaluate_script(&format!("window.__FLURX__.gripZoneHeight={}", grip_zone.0))
+            {
                 bevy::log::warn!("Failed to grip zone height: {}", e);
             }
         }
@@ -63,8 +69,7 @@ struct MouseDelta<'w, 's> {
 impl MouseDelta<'_, '_> {
     #[cfg(not(target_os = "linux"))]
     pub fn delta(&mut self) -> Option<Vec2> {
-        self
-            .er
+        self.er
             .read()
             .map(|event| event.delta)
             .reduce(|d1, d2| d1 + d2)
@@ -72,12 +77,9 @@ impl MouseDelta<'_, '_> {
 
     #[cfg(target_os = "linux")]
     pub fn delta(&mut self) -> Option<Vec2> {
-        self
-            .er
+        self.er
             .read()
-            .map(|event| {
-                Vec2::new(event.x, event.y)
-            })
+            .map(|event| Vec2::new(event.x, event.y))
             .reduce(|d1, d2| d1 + d2)
     }
 }
@@ -107,12 +109,7 @@ fn all_remove_current_moving(mut commands: Commands, views: Query<Entity, With<C
     }
 }
 
-fn move_bounds(
-    bounds: &mut Bounds,
-    offset: Vec2,
-    window_size: Vec2,
-    toolbar_height: Option<f32>,
-) {
+fn move_bounds(bounds: &mut Bounds, offset: Vec2, window_size: Vec2, toolbar_height: Option<f32>) {
     let max = toolbar_height
         .map(|height| Vec2::new(0., height))
         .unwrap_or_default();
@@ -180,9 +177,11 @@ fn bring_to_front(
         }
         #[cfg(any(target_os = "macos", target_os = "ios"))]
         RawWindowHandle::AppKit(_) => {
-            use wry::WebViewExtMacOS;
             use objc2::rc::Retained;
-            _webview.reparent(Retained::into_raw(_webview.ns_window())).output_log_if_failed();
+            use wry::WebViewExtMacOS;
+            _webview
+                .reparent(Retained::into_raw(_webview.ns_window()))
+                .output_log_if_failed();
         }
         _ => {}
     }
@@ -194,10 +193,7 @@ struct OnGripRelease {
     __FLURX__grip_release: u8,
 }
 
-fn apply_drag_end(
-    trigger: Trigger<OnGripRelease>,
-    mut commands: Commands,
-) {
+fn apply_drag_end(trigger: Trigger<OnGripRelease>, mut commands: Commands) {
     let webview_entity = trigger.target();
     commands.entity(webview_entity).remove::<CurrentMoving>();
 }

@@ -17,7 +17,6 @@ pub mod ipc {
     pub use bevy_flurx_ipc::prelude::*;
 }
 
-
 #[cfg(feature = "api")]
 /// [`bevy_flurx_api`]
 pub mod api {
@@ -25,12 +24,12 @@ pub mod api {
 }
 
 pub mod embedding;
-pub mod webview;
 mod util;
+pub mod webview;
 
 #[allow(missing_docs)]
 pub mod prelude {
-    pub use crate::{embedding::prelude::*, webview::prelude::*, WebviewWryPlugin};
+    pub use crate::{WebviewWryPlugin, embedding::prelude::*, webview::prelude::*};
     #[cfg(feature = "child_window")]
     pub use bevy_child_window::prelude::*;
     #[cfg(feature = "api")]
@@ -64,13 +63,9 @@ impl Default for WebviewWryPlugin {
 
 impl Plugin for WebviewWryPlugin {
     fn build(&self, app: &mut App) {
-        app
-            .register_type::<WryLocalRoot>()
+        app.register_type::<WryLocalRoot>()
             .insert_resource(WryLocalRoot(self.local_root.clone()))
-            .add_plugins((
-                WebviewPlugin,
-                EmbeddingWebviewPlugin,
-            ));
+            .add_plugins((WebviewPlugin, EmbeddingWebviewPlugin));
 
         if !app.is_plugin_added::<WebViewBundlesPlugin>() {
             app.add_plugins(WebViewBundlesPlugin);

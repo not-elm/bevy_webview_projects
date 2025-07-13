@@ -9,5 +9,3 @@ use serde::{Deserialize, Serialize};
 #[derive(Component, Eq, PartialEq, Copy, Clone, Default, Reflect, Serialize, Deserialize)]
 #[reflect(Component, Default, Serialize, Deserialize)]
 pub struct InitializeFocused(pub bool);
-
-

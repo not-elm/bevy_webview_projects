@@ -11,9 +11,6 @@ impl Plugin for WebviewSupportLinuxPlugin {
     }
 }
 
-fn main_iteration_do(
-    _: NonSend<WryWebViews>,
-) {
+fn main_iteration_do(_: NonSend<WryWebViews>) {
     gtk::main_iteration_do(false);
 }
-

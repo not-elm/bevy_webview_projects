@@ -13,28 +13,24 @@ fn main() {
     #[cfg(target_os = "macos")]
     app.insert_resource(ClearColor(Color::NONE));
 
-    app
-        .add_plugins((
-            DefaultPlugins.set(WindowPlugin {
-                primary_window: Some(Window {
-                    #[cfg(target_os = "macos")]
-                    composite_alpha_mode: bevy::window::CompositeAlphaMode::PostMultiplied,
-                    ..default()
-                }),
+    app.add_plugins((
+        DefaultPlugins.set(WindowPlugin {
+            primary_window: Some(Window {
+                #[cfg(target_os = "macos")]
+                composite_alpha_mode: bevy::window::CompositeAlphaMode::PostMultiplied,
                 ..default()
             }),
-            WebviewWryPlugin {
-                local_root: PathBuf::from("ui").join("embedding")
-            }
-        ))
-        .add_systems(Startup, spawn_webview)
-        .run();
+            ..default()
+        }),
+        WebviewWryPlugin {
+            local_root: PathBuf::from("ui").join("embedding"),
+        },
+    ))
+    .add_systems(Startup, spawn_webview)
+    .run();
 }
 
-fn spawn_webview(
-    mut commands: Commands,
-    window: Query<Entity, With<PrimaryWindow>>,
-) {
+fn spawn_webview(mut commands: Commands, window: Query<Entity, With<PrimaryWindow>>) {
     commands.spawn((
         Webview::Uri(WebviewUri::default()),
         // Specifies the window entity to embed.
@@ -59,4 +55,3 @@ fn spawn_webview(
         },
     ));
 }
-

@@ -6,7 +6,9 @@ use serde::{Deserialize, Serialize};
 ///
 /// Default is not specified.
 #[repr(transparent)]
-#[derive(Component, Debug, Clone, Eq, PartialEq, Hash, Default, Reflect, Serialize, Deserialize)]
+#[derive(
+    Component, Debug, Clone, Eq, PartialEq, Hash, Default, Reflect, Serialize, Deserialize,
+)]
 #[reflect(Component, Default, Serialize, Deserialize)]
 pub struct UserAgent(pub Option<String>);
 

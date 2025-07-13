@@ -4,9 +4,7 @@ use quote::quote;
 use syn::__private::TokenStream2;
 use syn::{FnArg, ItemFn, Type};
 
-pub fn expand_async_command(
-    f: &ItemFn,
-) -> TokenStream2 {
+pub fn expand_async_command(f: &ItemFn) -> TokenStream2 {
     let fn_ident = &f.sig.ident;
     let inputs = parse_async_command_inputs(f);
     expand_call(quote! { #fn_ident(#(#inputs,)*).await; })
@@ -27,14 +25,11 @@ fn expand_call(f: TokenStream2) -> TokenStream2 {
 
 fn parse_async_command_inputs(f: &ItemFn) -> Vec<TokenStream> {
     let mut args = Vec::with_capacity(3);
-    for arg in f
-        .sig
-        .inputs
-        .iter() {
+    for arg in f.sig.inputs.iter() {
         let FnArg::Typed(pat_type) = arg else {
             continue;
         };
-        let Type::Path(path) = &*pat_type.ty  else {
+        let Type::Path(path) = &*pat_type.ty else {
             continue;
         };
         let Some(last_segment) = path.path.segments.last() else {

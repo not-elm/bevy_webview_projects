@@ -1,6 +1,6 @@
 //! Provides apis to obtain special system paths.
 
-use crate::fs::{error_if_not_accessible, AllowPaths};
+use crate::fs::{AllowPaths, error_if_not_accessible};
 use crate::macros::api_plugin;
 use bevy::app::PluginGroupBuilder;
 use bevy::prelude::{PluginGroup, Res};
@@ -397,9 +397,7 @@ fn font() -> ActionSeed<(), Option<PathBuf>> {
     once::run(obtain_path(dirs::font_dir))
 }
 
-fn obtain_path(
-    f: fn() -> Option<PathBuf>
-) -> impl Fn(Option<Res<AllowPaths>>) -> Option<PathBuf> {
+fn obtain_path(f: fn() -> Option<PathBuf>) -> impl Fn(Option<Res<AllowPaths>>) -> Option<PathBuf> {
     move |scope: Option<Res<AllowPaths>>| {
         let path = f()?;
         if error_if_not_accessible(&path, &scope).is_ok() {

@@ -24,17 +24,28 @@ impl Bounds {
     // noinspection DuplicatedCode
     /// Returns the resize direction of the webview if the cursor is within the resize area.
     #[inline(always)]
-    pub fn maybe_resizable(&self, cursor_pos: Vec2, toolbar_height: Option<f32>) -> Option<ResizeMode> {
+    pub fn maybe_resizable(
+        &self,
+        cursor_pos: Vec2,
+        toolbar_height: Option<f32>,
+    ) -> Option<ResizeMode> {
         const MARGIN_VEC: Vec2 = Vec2::splat(5.);
         let tool = Vec2::new(0., toolbar_height.unwrap_or(0.));
         let o = self.position - tool;
         let s = self.size + tool;
         let rect = Rect::new(o.x, o.y, o.x + s.x, o.y + s.y);
 
-        if Rect::from_center_size(rect.center(), (rect.size() - Vec2::splat(0.01)).max(self.min_size)).contains(cursor_pos) {
+        if Rect::from_center_size(
+            rect.center(),
+            (rect.size() - Vec2::splat(0.01)).max(self.min_size),
+        )
+        .contains(cursor_pos)
+        {
             return None;
         }
-        if !Rect::from_center_size(rect.center(), rect.size() + 2. * MARGIN_VEC).contains(cursor_pos) {
+        if !Rect::from_center_size(rect.center(), rect.size() + 2. * MARGIN_VEC)
+            .contains(cursor_pos)
+        {
             return None;
         }
 
@@ -70,7 +81,9 @@ impl Bounds {
         match mode {
             ResizeMode::Left => {
                 let e_x = self.position.x + self.size.x;
-                self.size.x = min_size.x.max((self.position.x + self.size.x) - mouse_position.x);
+                self.size.x = min_size
+                    .x
+                    .max((self.position.x + self.size.x) - mouse_position.x);
                 self.position.x = e_x - self.size.x;
             }
             ResizeMode::Right => {
@@ -103,7 +116,6 @@ impl Bounds {
         }
     }
 }
-
 
 #[cfg(test)]
 mod tests {
@@ -357,7 +369,10 @@ mod tests {
             size: Vec2::new(5., 5.),
             ..default()
         };
-        assert_eq!(bounds.maybe_resizable(Vec2::new(6., 3.), None), Some(ResizeMode::Top));
+        assert_eq!(
+            bounds.maybe_resizable(Vec2::new(6., 3.), None),
+            Some(ResizeMode::Top)
+        );
     }
 
     #[test]
@@ -367,7 +382,10 @@ mod tests {
             size: Vec2::new(5., 5.),
             ..default()
         };
-        assert_eq!(bounds.maybe_resizable(Vec2::new(4.5, 4.5), None), Some(ResizeMode::TopLeft));
+        assert_eq!(
+            bounds.maybe_resizable(Vec2::new(4.5, 4.5), None),
+            Some(ResizeMode::TopLeft)
+        );
     }
 
     #[test]
@@ -377,7 +395,10 @@ mod tests {
             size: Vec2::new(5., 5.),
             ..default()
         };
-        assert_eq!(bounds.maybe_resizable(Vec2::new(4.5, 6.), None), Some(ResizeMode::Left));
+        assert_eq!(
+            bounds.maybe_resizable(Vec2::new(4.5, 6.), None),
+            Some(ResizeMode::Left)
+        );
     }
 
     #[test]
@@ -387,7 +408,10 @@ mod tests {
             size: Vec2::new(5., 5.),
             ..default()
         };
-        assert_eq!(bounds.maybe_resizable(Vec2::new(4.5, 11.), None), Some(ResizeMode::BottomLeft));
+        assert_eq!(
+            bounds.maybe_resizable(Vec2::new(4.5, 11.), None),
+            Some(ResizeMode::BottomLeft)
+        );
     }
 
     #[test]
@@ -397,7 +421,10 @@ mod tests {
             size: Vec2::new(5., 5.),
             ..default()
         };
-        assert_eq!(bounds.maybe_resizable(Vec2::new(7.5, 11.), None), Some(ResizeMode::Bottom));
+        assert_eq!(
+            bounds.maybe_resizable(Vec2::new(7.5, 11.), None),
+            Some(ResizeMode::Bottom)
+        );
     }
 
     #[test]
@@ -407,7 +434,10 @@ mod tests {
             size: Vec2::new(5., 5.),
             ..default()
         };
-        assert_eq!(bounds.maybe_resizable(Vec2::new(13.5, 8.), None), Some(ResizeMode::Right));
+        assert_eq!(
+            bounds.maybe_resizable(Vec2::new(13.5, 8.), None),
+            Some(ResizeMode::Right)
+        );
     }
 
     #[test]
@@ -417,7 +447,10 @@ mod tests {
             size: Vec2::new(5., 5.),
             ..default()
         };
-        assert_eq!(bounds.maybe_resizable(Vec2::new(11., 3.), None), Some(ResizeMode::TopRight));
+        assert_eq!(
+            bounds.maybe_resizable(Vec2::new(11., 3.), None),
+            Some(ResizeMode::TopRight)
+        );
     }
 
     #[test]
@@ -427,7 +460,10 @@ mod tests {
             size: Vec2::new(100., 100.),
             ..default()
         };
-        assert_eq!(bounds.maybe_resizable(Vec2::new(150., 94.), Some(5.)), Some(ResizeMode::Top));
+        assert_eq!(
+            bounds.maybe_resizable(Vec2::new(150., 94.), Some(5.)),
+            Some(ResizeMode::Top)
+        );
         assert_eq!(bounds.maybe_resizable(Vec2::new(150., 96.), Some(5.)), None);
     }
 }

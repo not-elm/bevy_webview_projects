@@ -8,8 +8,6 @@ async fn hello() -> String {
 }
 
 fn main() {
-    IpcHandlers::new([
-        hello,
-    ]);
+    IpcHandlers::new([hello]);
     assert_eq!(hello().id(), "FLURX|TEST");
 }

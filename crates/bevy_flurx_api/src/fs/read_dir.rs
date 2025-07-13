@@ -1,8 +1,8 @@
 use crate::error::ApiResult;
-use crate::fs::{error_if_not_accessible, join_path_if_need, AllowPaths, BaseDirectory};
+use crate::fs::{AllowPaths, BaseDirectory, error_if_not_accessible, join_path_if_need};
 use crate::macros::api_plugin;
 use bevy::prelude::{In, Res};
-use bevy_flurx::action::{once, Action};
+use bevy_flurx::action::{Action, once};
 use bevy_flurx_ipc::prelude::*;
 use serde::{Deserialize, Serialize};
 use std::ffi::OsString;
@@ -70,7 +70,7 @@ fn read_dirs(path: &PathBuf) -> std::io::Result<Vec<FileEntry>> {
 #[cfg(test)]
 //noinspection DuplicatedCode
 mod tests {
-    use crate::fs::read_dir::{read_dir_system, Args, FileEntry};
+    use crate::fs::read_dir::{Args, FileEntry, read_dir_system};
     use crate::tests::test_app;
     use bevy::prelude::*;
     use bevy::utils::default;
@@ -86,10 +86,14 @@ mod tests {
             commands.spawn(Reactor::schedule(|task| async move {
                 let tmp_dir = std::env::temp_dir().join("read_dir_empty_dir");
                 let _ = create_dir(&tmp_dir);
-                let entries: Vec<FileEntry> = task.will(Update, once::run(read_dir_system).with(Args {
-                    path: tmp_dir,
-                    ..default()
-                }))
+                let entries: Vec<FileEntry> = task
+                    .will(
+                        Update,
+                        once::run(read_dir_system).with(Args {
+                            path: tmp_dir,
+                            ..default()
+                        }),
+                    )
                     .await
                     .unwrap();
                 assert!(entries.is_empty());
@@ -106,17 +110,24 @@ mod tests {
                 let tmp_dir = std::env::temp_dir().join("read_dir_text_dir");
                 let _ = create_dir(&tmp_dir);
                 let _ = std::fs::write(tmp_dir.join("hello.txt"), "hello");
-                let entries: Vec<FileEntry> = task.will(Update, once::run(read_dir_system).with(Args {
-                    path: tmp_dir.clone(),
-                    ..default()
-                }))
+                let entries: Vec<FileEntry> = task
+                    .will(
+                        Update,
+                        once::run(read_dir_system).with(Args {
+                            path: tmp_dir.clone(),
+                            ..default()
+                        }),
+                    )
                     .await
                     .unwrap();
-                assert_eq!(entries, vec![FileEntry {
-                    path: tmp_dir.join("hello.txt"),
-                    name: OsString::from("hello.txt"),
-                    children: None,
-                }]);
+                assert_eq!(
+                    entries,
+                    vec![FileEntry {
+                        path: tmp_dir.join("hello.txt"),
+                        name: OsString::from("hello.txt"),
+                        children: None,
+                    }]
+                );
             }));
         });
         app.update();
@@ -129,17 +140,24 @@ mod tests {
             commands.spawn(Reactor::schedule(|task| async move {
                 let tmp_dir = std::env::temp_dir().join("read_dir_contains_dir");
                 let _ = create_dir_all(tmp_dir.join("child"));
-                let entries: Vec<FileEntry> = task.will(Update, once::run(read_dir_system).with(Args {
-                    path: tmp_dir.clone(),
-                    ..default()
-                }))
+                let entries: Vec<FileEntry> = task
+                    .will(
+                        Update,
+                        once::run(read_dir_system).with(Args {
+                            path: tmp_dir.clone(),
+                            ..default()
+                        }),
+                    )
                     .await
                     .unwrap();
-                assert_eq!(entries, vec![FileEntry {
-                    path: tmp_dir.join("child"),
-                    name: OsString::from("child"),
-                    children: Some(vec![]),
-                }]);
+                assert_eq!(
+                    entries,
+                    vec![FileEntry {
+                        path: tmp_dir.join("child"),
+                        name: OsString::from("child"),
+                        children: Some(vec![]),
+                    }]
+                );
             }));
         });
         app.update();

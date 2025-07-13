@@ -1,6 +1,6 @@
-use bevy_flurx::action::{once, Action};
-use bevy_flurx_ipc::prelude::*;
 use crate::macros::api_plugin;
+use bevy_flurx::action::{Action, once};
+use bevy_flurx_ipc::prelude::*;
 
 api_plugin!(
     /// You'll be able to get a describing the family of the operating system from a webview.

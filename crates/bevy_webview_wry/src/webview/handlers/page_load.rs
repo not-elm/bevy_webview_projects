@@ -28,8 +28,7 @@ pub(crate) struct PageLoadPlugin;
 
 impl Plugin for PageLoadPlugin {
     fn build(&self, app: &mut App) {
-        app
-            .register_wry_event::<PageLoadStarted>()
+        app.register_wry_event::<PageLoadStarted>()
             .register_wry_event::<PageLoadFinished>();
     }
 }

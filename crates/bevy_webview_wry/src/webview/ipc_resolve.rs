@@ -10,18 +10,18 @@ impl Plugin for IpcResolvePlugin {
     }
 }
 
-fn resolve_event(
-    mut er: EventReader<IpcResolveEvent>,
-    mut views: NonSendMut<WryWebViews>,
-) {
+fn resolve_event(mut er: EventReader<IpcResolveEvent>, mut views: NonSendMut<WryWebViews>) {
     for IpcResolveEvent {
         entity,
         resolve_id,
-        output
-    } in er.read() {
+        output,
+    } in er.read()
+    {
         if let Some(view) = views.get_mut(entity) {
-            view.evaluate_script(&format!("window.__FLURX__.__resolveIpc({resolve_id}, {output})")).unwrap();
+            view.evaluate_script(&format!(
+                "window.__FLURX__.__resolveIpc({resolve_id}, {output})"
+            ))
+            .unwrap();
         }
     }
 }
-

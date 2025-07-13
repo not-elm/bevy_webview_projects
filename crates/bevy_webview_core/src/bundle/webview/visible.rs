@@ -1,6 +1,7 @@
-use bevy::prelude::{Component, Reflect, ReflectComponent, ReflectDefault, ReflectDeserialize, ReflectSerialize};
+use bevy::prelude::{
+    Component, Reflect, ReflectComponent, ReflectDefault, ReflectDeserialize, ReflectSerialize,
+};
 use serde::{Deserialize, Serialize};
-
 
 /// Control the visibility of the webview.
 ///
@@ -15,5 +16,3 @@ impl Default for WebviewVisible {
         Self(true)
     }
 }
-
-

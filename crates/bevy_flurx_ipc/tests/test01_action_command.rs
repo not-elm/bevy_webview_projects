@@ -32,8 +32,12 @@ fn pattern5(_: WebviewEntity, _: In<String>) -> ActionSeed {
 }
 
 #[command]
-fn action_command(In(args): In<String>, entity: WebviewEntity) -> Action<(String, WebviewEntity), String> {
-    once::run(|In(_): In<(String, WebviewEntity)>| "output is returned to Javascript".to_string()).with((args, entity))
+fn action_command(
+    In(args): In<String>,
+    entity: WebviewEntity,
+) -> Action<(String, WebviewEntity), String> {
+    once::run(|In(_): In<(String, WebviewEntity)>| "output is returned to Javascript".to_string())
+        .with((args, entity))
 }
 
 fn main() {

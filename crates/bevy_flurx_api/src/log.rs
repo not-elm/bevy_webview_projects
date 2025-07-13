@@ -16,8 +16,7 @@ pub struct AllLogPlugins;
 
 impl Plugin for AllLogPlugins {
     fn build(&self, app: &mut App) {
-        app
-            .add_ipc_trigger::<RequestPrintln>("FLURX|log::println")
+        app.add_ipc_trigger::<RequestPrintln>("FLURX|log::println")
             .add_ipc_trigger::<RequestLog>("FLURX|log::log")
             .add_observer(apply_println_api)
             .add_observer(apply_log_api);

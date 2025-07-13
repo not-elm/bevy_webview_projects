@@ -1,17 +1,20 @@
-use crate::prelude::{AutoPlay, Background, Bounds, DragDropEvent, DragEntered, DragLeave, DragOver, Dropped, EmbedWithin, EnableClipboard, GripZone, HotkeysZoom, Incognito, InitializeFocused, IsOpenDevtools, PassedUrl, Resizable, Theme, UseDevtools, UseHttpsScheme, WebviewUri, WebviewVisible};
-use bevy::prelude::{App, Component, Plugin, Reflect, ReflectComponent, ReflectDeserialize, ReflectSerialize};
+use crate::prelude::{
+    AutoPlay, Background, Bounds, DragDropEvent, DragEntered, DragLeave, DragOver, Dropped,
+    EmbedWithin, EnableClipboard, GripZone, HotkeysZoom, Incognito, InitializeFocused,
+    IsOpenDevtools, PassedUrl, Resizable, Theme, UseDevtools, UseHttpsScheme, WebviewUri,
+    WebviewVisible,
+};
+use bevy::prelude::{
+    App, Component, Plugin, Reflect, ReflectComponent, ReflectDeserialize, ReflectSerialize,
+};
 use serde::{Deserialize, Serialize};
 
-pub mod webview;
 pub mod embedding;
+pub mod webview;
 
 #[allow(missing_docs)]
 pub mod prelude {
-    pub use crate::bundle::{
-        embedding::*,
-        webview::*,
-        WebviewInitialized,
-    };
+    pub use crate::bundle::{WebviewInitialized, embedding::*, webview::*};
 }
 
 /// Marker component indicating that the webview has been initialized.
@@ -24,8 +27,7 @@ pub struct WebViewBundlesPlugin;
 
 impl Plugin for WebViewBundlesPlugin {
     fn build(&self, app: &mut App) {
-        app
-            .register_type::<WebviewInitialized>()
+        app.register_type::<WebviewInitialized>()
             .register_type::<Bounds>()
             .register_type::<GripZone>()
             .register_type::<Resizable>()
@@ -58,4 +60,3 @@ impl Plugin for WebViewBundlesPlugin {
             .add_event::<Dropped>();
     }
 }
-

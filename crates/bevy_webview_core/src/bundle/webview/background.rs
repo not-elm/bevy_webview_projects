@@ -1,7 +1,10 @@
-use bevy::prelude::{Color, Component, Reflect, ReflectComponent, ReflectDefault, ReflectDeserialize, ReflectSerialize};
+use bevy::prelude::{
+    Color, Component, Reflect, ReflectComponent, ReflectDefault, ReflectDeserialize,
+    ReflectSerialize,
+};
 use serde::{Deserialize, Serialize};
 
-/// Represents the webview background. 
+/// Represents the webview background.
 ///
 /// Default is [`Background::Unspecified`].
 #[derive(Component, Clone, Debug, PartialEq, Default, Reflect, Serialize, Deserialize)]

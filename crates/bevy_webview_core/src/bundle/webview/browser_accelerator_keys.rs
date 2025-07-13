@@ -6,7 +6,7 @@ use serde::{Deserialize, Serialize};
 ///
 /// Default is `true`.
 ///
-/// This setting only works on `Windows`. 
+/// This setting only works on `Windows`.
 #[repr(transparent)]
 #[derive(Component, Debug, Eq, PartialEq, Copy, Clone, Reflect, Hash, Serialize, Deserialize)]
 #[reflect(Component, Default, Serialize, Deserialize)]

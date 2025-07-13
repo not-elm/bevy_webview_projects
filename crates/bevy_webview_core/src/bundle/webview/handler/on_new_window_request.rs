@@ -1,7 +1,8 @@
 use super::PassedUrl;
 use bevy::prelude::{Component, Window};
 
-pub(crate) type BoxedNewWindowRequest = Box<dyn Fn(PassedUrl) -> NewWindowResponse + Send + Sync + 'static>;
+pub(crate) type BoxedNewWindowRequest =
+    Box<dyn Fn(PassedUrl) -> NewWindowResponse + Send + Sync + 'static>;
 
 #[allow(clippy::large_enum_variant)]
 /// The response to [`OnNewWindowRequest`].
@@ -32,5 +33,3 @@ impl OnNewWindowRequest {
         self.0.take()
     }
 }
-
-

@@ -22,10 +22,7 @@ async fn pattern4(task: ReactorTask) -> String {
 }
 
 #[command]
-async fn pattern5(
-    In(_args): In<()>,
-    WebviewEntity(_entity): WebviewEntity,
-) {}
+async fn pattern5(In(_args): In<()>, WebviewEntity(_entity): WebviewEntity) {}
 
 #[command]
 async fn pattern6(In(frames): In<usize>, task: ReactorTask) {
@@ -33,59 +30,26 @@ async fn pattern6(In(frames): In<usize>, task: ReactorTask) {
 }
 
 #[command]
-async fn pattern7(
-    In(_args): In<()>,
-    _task: ReactorTask,
-) {}
+async fn pattern7(In(_args): In<()>, _task: ReactorTask) {}
 
 #[command]
-async fn pattern8(
-    In(_args): In<()>,
-    _entity: WebviewEntity,
-    _task: ReactorTask,
-) {}
+async fn pattern8(In(_args): In<()>, _entity: WebviewEntity, _task: ReactorTask) {}
 
 #[command]
-async fn pattern9(
-    _entity: WebviewEntity,
-    In(_args): In<()>,
-    _task: ReactorTask,
-) {}
+async fn pattern9(_entity: WebviewEntity, In(_args): In<()>, _task: ReactorTask) {}
 
 #[command]
-async fn pattern10(
-    _task: ReactorTask,
-    _entity: WebviewEntity,
-    In(_args): In<()>,
-) {}
+async fn pattern10(_task: ReactorTask, _entity: WebviewEntity, In(_args): In<()>) {}
 
 #[command]
-async fn pattern11(
-    _entity: WebviewEntity,
-    _task: ReactorTask,
-    In(_args): In<()>,
-) {}
+async fn pattern11(_entity: WebviewEntity, _task: ReactorTask, In(_args): In<()>) {}
 
 #[command]
-async fn pattern12(
-    In(_args): In<()>,
-    _task: ReactorTask,
-    _entity: WebviewEntity,
-) {}
+async fn pattern12(In(_args): In<()>, _task: ReactorTask, _entity: WebviewEntity) {}
 
 fn main() {
     IpcHandlers::new([
-        pattern1,
-        pattern2,
-        pattern3,
-        pattern4,
-        pattern5,
-        pattern6,
-        pattern7,
-        pattern8,
-        pattern9,
-        pattern10,
-        pattern11,
-        pattern12,
+        pattern1, pattern2, pattern3, pattern4, pattern5, pattern6, pattern7, pattern8, pattern9,
+        pattern10, pattern11, pattern12,
     ]);
 }

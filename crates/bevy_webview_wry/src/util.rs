@@ -13,7 +13,6 @@ impl<T> WryResultLog for wry::Result<T> {
     }
 }
 
-
 #[inline]
 pub(crate) fn as_wry_rect(bounds: &Bounds) -> wry::Rect {
     wry::Rect {

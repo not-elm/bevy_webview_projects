@@ -1,12 +1,15 @@
 //! Allows you to use http apis.
 
-use crate::error::http::DenyOrigin;
 use crate::error::ApiResult;
+use crate::error::http::DenyOrigin;
 use crate::macros::api_plugin;
 use bevy::app::PluginGroupBuilder;
 use bevy::platform::collections::hash_map::HashMap;
-use bevy::prelude::{In, PluginGroup, Reflect, ReflectDefault, ReflectDeserialize, ReflectResource, ReflectSerialize, Res, Resource, Update};
-use bevy_flurx::prelude::{once, side_effect, Pipe};
+use bevy::prelude::{
+    In, PluginGroup, Reflect, ReflectDefault, ReflectDeserialize, ReflectResource,
+    ReflectSerialize, Res, Resource, Update,
+};
+use bevy_flurx::prelude::{Pipe, once, side_effect};
 use bevy_flurx::task::ReactorTask;
 use bevy_flurx_ipc::prelude::*;
 use reqwest::header::{HeaderMap, HeaderName};
@@ -95,7 +98,7 @@ impl AccessAllowOrigins {
     ///     "https://example.com/"
     /// ]));
     /// ```
-    pub fn new<O>(origins: impl IntoIterator<Item=O>) -> Self
+    pub fn new<O>(origins: impl IntoIterator<Item = O>) -> Self
     where
         O: Into<String>,
     {
@@ -104,9 +107,7 @@ impl AccessAllowOrigins {
 
     /// Returns whether the url is permitted.
     pub fn is_allow(&self, url: &str) -> bool {
-        self.0.iter().any(|origin| {
-            url.starts_with(origin.as_str())
-        })
+        self.0.iter().any(|origin| url.starts_with(origin.as_str()))
     }
 }
 
@@ -114,20 +115,23 @@ impl AccessAllowOrigins {
 async fn fetch(In(args): In<Args>, task: ReactorTask) -> ApiResult<Output> {
     task.will(
         Update,
-        once::run(error_if_deny_access).with(args)
-            .pipe(side_effect::tokio::spawn(|args: ApiResult<Args>| async move {
-                let args = args?;
-                let response = args.fetch().await?;
-                let status = response.status();
-                Ok(Output {
-                    headers: to_hash_map(response.headers()),
-                    body: response.bytes().await?.to_vec(),
-                    status: status.as_u16(),
-                    status_text: status.to_string(),
-                })
-            })),
+        once::run(error_if_deny_access)
+            .with(args)
+            .pipe(side_effect::tokio::spawn(
+                |args: ApiResult<Args>| async move {
+                    let args = args?;
+                    let response = args.fetch().await?;
+                    let status = response.status();
+                    Ok(Output {
+                        headers: to_hash_map(response.headers()),
+                        body: response.bytes().await?.to_vec(),
+                        status: status.as_u16(),
+                        status_text: status.to_string(),
+                    })
+                },
+            )),
     )
-        .await
+    .await
 }
 
 fn error_if_deny_access(
@@ -164,7 +168,7 @@ fn to_hash_map(headers: &HeaderMap) -> HashMap<String, String> {
 #[cfg(test)]
 mod tests {
     use crate::error::ApiResult;
-    use crate::http::{error_if_deny_access, AccessAllowOrigins, Args};
+    use crate::http::{AccessAllowOrigins, Args, error_if_deny_access};
     use crate::tests::test_app;
     use bevy::app::{Startup, Update};
     use bevy::prelude::Commands;
@@ -179,7 +183,7 @@ mod tests {
                 method: None,
                 ..default()
             }
-                .method()?,
+            .method()?,
             Method::GET
         );
         assert_eq!(
@@ -187,7 +191,7 @@ mod tests {
                 method: Some("GET".to_string()),
                 ..default()
             }
-                .method()?,
+            .method()?,
             Method::GET
         );
         assert_eq!(
@@ -195,7 +199,7 @@ mod tests {
                 method: Some("POST".to_string()),
                 ..default()
             }
-                .method()?,
+            .method()?,
             Method::POST
         );
         assert_eq!(
@@ -203,7 +207,7 @@ mod tests {
                 method: Some("PUT".to_string()),
                 ..default()
             }
-                .method()?,
+            .method()?,
             Method::PUT
         );
         assert_eq!(
@@ -211,7 +215,7 @@ mod tests {
                 method: Some("DELETE".to_string()),
                 ..default()
             }
-                .method()?,
+            .method()?,
             Method::DELETE
         );
         Ok(())
@@ -219,18 +223,13 @@ mod tests {
 
     #[test]
     fn deny_origins() {
-        let origins = AccessAllowOrigins::new([
-            "https://example.com",
-        ]);
+        let origins = AccessAllowOrigins::new(["https://example.com"]);
         assert!(!origins.is_allow("https://hoge.com"));
     }
 
     #[test]
     fn allow_origins() {
-        let origins = AccessAllowOrigins::new([
-            "https://example.com",
-            "https://hoge.com/",
-        ]);
+        let origins = AccessAllowOrigins::new(["https://example.com", "https://hoge.com/"]);
         assert!(origins.is_allow("https://example.com"));
         assert!(origins.is_allow("https://hoge.com/index.html"));
     }
@@ -240,10 +239,15 @@ mod tests {
         let mut app = test_app();
         app.add_systems(Startup, |mut commands: Commands| {
             commands.spawn(Reactor::schedule(|task| async move {
-                let result = task.will(Update, once::run(error_if_deny_access).with(Args {
-                    url: "https://hoge.com".to_string(),
-                    ..default()
-                })).await;
+                let result = task
+                    .will(
+                        Update,
+                        once::run(error_if_deny_access).with(Args {
+                            url: "https://hoge.com".to_string(),
+                            ..default()
+                        }),
+                    )
+                    .await;
                 result.expect("Expected to return Result::ok but was Err.");
             }));
         });
@@ -255,15 +259,16 @@ mod tests {
         let mut app = test_app();
         app.add_systems(Startup, |mut commands: Commands| {
             commands.spawn(Reactor::schedule(|task| async move {
-                let result = task.will(Update, {
-                    once::res::insert().with(AccessAllowOrigins::new([
-                        "https://example.com",
-                    ]))
-                        .then(once::run(error_if_deny_access).with(Args {
-                            url: "https://example.com".to_string(),
-                            ..default()
-                        }))
-                }).await;
+                let result = task
+                    .will(Update, {
+                        once::res::insert()
+                            .with(AccessAllowOrigins::new(["https://example.com"]))
+                            .then(once::run(error_if_deny_access).with(Args {
+                                url: "https://example.com".to_string(),
+                                ..default()
+                            }))
+                    })
+                    .await;
                 result.expect("Expected to return Result::ok but was error.");
             }));
         });
@@ -275,15 +280,16 @@ mod tests {
         let mut app = test_app();
         app.add_systems(Startup, |mut commands: Commands| {
             commands.spawn(Reactor::schedule(|task| async move {
-                let result: ApiResult<_> = task.will(Update, {
-                    once::res::insert().with(AccessAllowOrigins::new([
-                        "https://example.com",
-                    ]))
-                        .then(once::run(error_if_deny_access).with(Args {
-                            url: "https://hoge.com".to_string(),
-                            ..default()
-                        }))
-                }).await;
+                let result: ApiResult<_> = task
+                    .will(Update, {
+                        once::res::insert()
+                            .with(AccessAllowOrigins::new(["https://example.com"]))
+                            .then(once::run(error_if_deny_access).with(Args {
+                                url: "https://hoge.com".to_string(),
+                                ..default()
+                            }))
+                    })
+                    .await;
                 result.expect_err("Expected to return Err but was Ok.");
             }));
         });

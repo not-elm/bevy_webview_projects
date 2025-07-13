@@ -2,8 +2,8 @@ use super::PassedUrl;
 use bevy::prelude::Component;
 use std::path::PathBuf;
 
-pub(crate) type BoxedDownloadHandler = Box<dyn FnMut(PassedUrl, &mut PathBuf) -> bool + Send + Sync>;
-
+pub(crate) type BoxedDownloadHandler =
+    Box<dyn FnMut(PassedUrl, &mut PathBuf) -> bool + Send + Sync>;
 
 /// The callback handler for download requests.
 ///
@@ -36,5 +36,3 @@ impl OnDownload {
         self.0.take()
     }
 }
-
-
