@@ -15,14 +15,22 @@ jobs:
       matrix:
         os: [ macos-latest, windows-latest, ubuntu-latest ]
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
+      - uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cargo/bin/
+            ~/.cargo/registry/index/
+            ~/.cargo/registry/cache/
+            ~/.cargo/git/db/
+            target/
+          key: ${{ runner.os }}-cargo-test-${{ hashFiles('**/Cargo.toml') }}
 
       - name: Toolchain
         uses: dtolnay/rust-toolchain@stable
         with:
           toolchain: stable
-          components: 'clippy,rust-docs'
+          components: 'clippy,rust-docs,rustfmt'
 
       - name: Install alsa and udev
         run: |
@@ -44,10 +52,10 @@ jobs:
         run: cargo +stable clippy --all --all-features --tests -- -D warnings
 
       - name: Test all features
-        run: cargo test --all-features --all
+        run: cargo +nightly test --all-features --all
 
       - name: Doc lint
         run: cargo +nightly doc --all-features --no-deps
 
       - name: Check format
-        run: cargo fmt --all -- --check
+        run: cargo +stable fmt --all -- --check
