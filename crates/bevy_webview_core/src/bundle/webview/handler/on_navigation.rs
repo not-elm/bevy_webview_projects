@@ -3,7 +3,6 @@ use bevy::prelude::Component;
 
 pub(crate) type BoxedNavigateHandler = Box<dyn Fn(PassedUrl) -> bool + Send + Sync + 'static>;
 
-
 /// Set a navigation handler to decide if incoming url is allowed to navigate.
 #[repr(transparent)]
 #[derive(Component, Default)]
@@ -27,6 +26,3 @@ impl OnNavigation {
         self.0.take()
     }
 }
-
-
-

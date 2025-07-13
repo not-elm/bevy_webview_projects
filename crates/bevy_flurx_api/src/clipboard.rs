@@ -4,10 +4,9 @@ use crate::error::ApiResult;
 use crate::macros::api_plugin;
 use bevy::app::PluginGroupBuilder;
 use bevy::prelude::{In, PluginGroup};
-use bevy_flurx::action::once;
 use bevy_flurx::action::Action;
+use bevy_flurx::action::once;
 use bevy_flurx_ipc::prelude::*;
-
 
 /// Allows you to use all clipboard plugins.
 ///
@@ -58,9 +57,7 @@ fn get_text() -> Action<(), ApiResult<String>> {
     once::run(get_text_system).with(())
 }
 
-fn set_text_system(
-    In(text): In<String>
-) -> ApiResult {
+fn set_text_system(In(text): In<String>) -> ApiResult {
     let mut clipboard = arboard::Clipboard::new()?;
     clipboard.set_text(text)?;
     Ok(())
@@ -70,7 +67,6 @@ fn get_text_system() -> ApiResult<String> {
     let mut clipboard = arboard::Clipboard::new()?;
     Ok(clipboard.get_text()?)
 }
-
 
 #[cfg(test)]
 //noinspection DuplicatedCode
@@ -87,10 +83,12 @@ mod tests {
         let mut app = test_app();
         app.add_systems(Startup, |mut commands: Commands| {
             commands.spawn(Reactor::schedule(|task| async move {
-                let clipboard_text: String = task.will(Update, {
-                    once::run(set_text_system).with("Hello!".to_string())
-                        .then(once::run(get_text_system))
-                })
+                let clipboard_text: String = task
+                    .will(Update, {
+                        once::run(set_text_system)
+                            .with("Hello!".to_string())
+                            .then(once::run(get_text_system))
+                    })
                     .await
                     .unwrap();
                 assert_eq!(clipboard_text, "Hello!");

@@ -1,13 +1,13 @@
 use crate::dialog::DialogFilter;
 use crate::fs::AllowPaths;
 use crate::macros::api_plugin;
+use bevy::prelude::{In, ResMut, Update};
 use bevy_flurx::action::once;
 use bevy_flurx::task::ReactorTask;
 use bevy_flurx_ipc::prelude::*;
 use rfd::FileDialog;
 use serde::Deserialize;
 use std::path::PathBuf;
-use bevy::prelude::{In, ResMut, Update};
 
 api_plugin!(
     /// You'll be able to open a file save dialog.
@@ -34,14 +34,12 @@ struct Args {
 #[command(id = "FLURX|dialog::save")]
 async fn save(In(args): In<Args>, task: ReactorTask) -> Option<PathBuf> {
     let path = select_save_path(args);
-    task.will(Update, once::run(save_system).with(path.clone())).await;
+    task.will(Update, once::run(save_system).with(path.clone()))
+        .await;
     path
 }
 
-fn save_system(
-    In(path): In<Option<PathBuf>>,
-    allows: Option<ResMut<AllowPaths>>,
-) {
+fn save_system(In(path): In<Option<PathBuf>>, allows: Option<ResMut<AllowPaths>>) {
     if let Some(mut allows) = allows {
         if let Some(path) = path {
             allows.add(path);
@@ -65,4 +63,3 @@ fn select_save_path(args: Args) -> Option<PathBuf> {
     }
     dialog.save_file()
 }
-

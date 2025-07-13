@@ -1,23 +1,23 @@
 //! Provides the utility actions to read a system information.
 
 mod family;
-mod os_version;
-mod kernel_version;
-mod system_name;
 mod host_name;
+mod kernel_version;
 mod locale;
+mod os_version;
+mod system_name;
 
-use bevy::app::PluginGroupBuilder;
-use bevy::prelude::PluginGroup;
 use crate::macros::api_plugin;
-use bevy_flurx::action::{once, Action};
-use bevy_flurx_ipc::prelude::*;
 pub use crate::os::family::OsFamilyPlugin;
 pub use crate::os::host_name::OsHostNamePlugin;
-pub use crate::os::os_version::{OsVersionPlugin, OsLongVersionPlugin};
 pub use crate::os::kernel_version::OsKernelVersionPlugin;
 pub use crate::os::locale::OsLocalePlugin;
+pub use crate::os::os_version::{OsLongVersionPlugin, OsVersionPlugin};
 pub use crate::os::system_name::OsSystemNamePlugin;
+use bevy::app::PluginGroupBuilder;
+use bevy::prelude::PluginGroup;
+use bevy_flurx::action::{Action, once};
+use bevy_flurx_ipc::prelude::*;
 
 /// Allows you to use all os plugins.
 ///

@@ -30,7 +30,7 @@ serde = { workspace = true }
 serde_json = { workspace = true }
 rand = "0.9"
 bevy_child_window = { version = "0.2", optional = true }
-wry = { version = "0.51", features = ["transparent", "linux-body"] }
+wry = { version = "0.52", features = ["transparent", "linux-body"] }
 
 [target.'cfg(any(target_os="ios", target_os="macos"))'.dependencies]
 objc2 = { version = "0.6" }

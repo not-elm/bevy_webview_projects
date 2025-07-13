@@ -2,7 +2,7 @@ use crate::dialog::DialogFilter;
 use crate::fs::AllowPaths;
 use crate::macros::api_plugin;
 use bevy::prelude::{In, ResMut};
-use bevy_flurx::action::{once, Action};
+use bevy_flurx::action::{Action, once};
 use bevy_flurx_ipc::prelude::*;
 use rfd::FileDialog;
 use serde::{Deserialize, Serialize};
@@ -43,10 +43,7 @@ fn open(In(args): In<Args>) -> Action<Args, SelectedPaths> {
     once::run(open_system).with(args)
 }
 
-fn open_system(
-    In(args): In<Args>,
-    allows: Option<ResMut<AllowPaths>>,
-) -> SelectedPaths {
+fn open_system(In(args): In<Args>, allows: Option<ResMut<AllowPaths>>) -> SelectedPaths {
     let paths = select_paths(args);
     if let Some(mut allows) = allows {
         match &paths {
@@ -76,11 +73,13 @@ fn select_paths(args: Args) -> SelectedPaths {
             dialog = dialog.add_filter(filter.name, &filter.extensions);
         }
     }
-    match (args.directory.unwrap_or(false), args.multiple.unwrap_or(false)) {
+    match (
+        args.directory.unwrap_or(false),
+        args.multiple.unwrap_or(false),
+    ) {
         (true, true) => SelectedPaths::Multiple(dialog.pick_folders()),
         (true, false) => SelectedPaths::Single(dialog.pick_folder()),
         (false, true) => SelectedPaths::Multiple(dialog.pick_files()),
         (false, false) => SelectedPaths::Single(dialog.pick_file()),
     }
 }
-

@@ -1,14 +1,16 @@
 //! Declares the components which creates the webview as child.
 
-use bevy::prelude::{Component, Entity, Reflect, ReflectComponent, ReflectDeserialize, ReflectSerialize};
+use bevy::prelude::{
+    Component, Entity, Reflect, ReflectComponent, ReflectDeserialize, ReflectSerialize,
+};
 pub use bounds::Bounds;
 pub use grip_zone::GripZone;
 pub use resize::ResizeMode;
 use serde::{Deserialize, Serialize};
 
-mod resize;
 mod bounds;
 mod grip_zone;
+mod resize;
 
 /// Holds the window entity to embed the webview in.
 ///
@@ -51,4 +53,3 @@ impl Default for Resizable {
         Self(true)
     }
 }
-

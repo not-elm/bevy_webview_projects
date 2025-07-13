@@ -6,8 +6,8 @@ use serde::{Deserialize, Serialize};
 use std::fmt::{Debug, Display, Formatter};
 use std::path::{Path, PathBuf};
 use std::sync::LazyLock;
-use wry::http::header::{CONTENT_SECURITY_POLICY, CONTENT_TYPE};
 use wry::http::Response;
+use wry::http::header::{CONTENT_SECURITY_POLICY, CONTENT_TYPE};
 
 #[derive(Debug, Component)]
 pub struct WryResponseHandle(pub Handle<WryResponseBody>);
@@ -15,7 +15,9 @@ pub struct WryResponseHandle(pub Handle<WryResponseBody>);
 #[derive(Debug, Asset, TypePath)]
 pub struct WryResponseBody(pub Vec<u8>);
 
-#[derive(Serialize, Deserialize, Default, Eq, PartialEq, Hash, Component, Reflect, Clone, Debug)]
+#[derive(
+    Serialize, Deserialize, Default, Eq, PartialEq, Hash, Component, Reflect, Clone, Debug,
+)]
 #[reflect(Component, Serialize, Deserialize)]
 pub struct WryRequestArgs {
     pub csp: Option<Csp>,
@@ -60,7 +62,9 @@ fn try_convert_to_response(
     args: &WryRequestArgs,
 ) -> Result<Response<Vec<u8>>, std::io::Error> {
     let Some(mimetype) = get_mime_type(&args.path) else {
-        return Err(std::io::Error::other(Box::new(NotImplError(args.path.clone()))));
+        return Err(std::io::Error::other(Box::new(NotImplError(
+            args.path.clone(),
+        ))));
     };
     let mut response_builder = Response::builder();
     if let Some(csp) = args.csp.as_ref() {
@@ -86,7 +90,6 @@ impl Debug for NotImplError {
 }
 
 impl std::error::Error for NotImplError {}
-
 
 const EXTENSION_MAP: &[(&[&str], &str)] = &[
     (&["htm", "html"], "text/html"),
@@ -118,7 +121,10 @@ const EXTENSION_MAP: &[(&[&str], &str)] = &[
     (&["bz2"], "application/x-bzip2"),
     (&["csh"], "application/x-csh"),
     (&["doc"], "application/msword"),
-    (&["docx"], "application/vnd.openxmlformats-officedocument.wordprocessingml.document"),
+    (
+        &["docx"],
+        "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+    ),
     (&["eot"], "application/vnd.ms-fontobject"),
     (&["epub"], "application/epub+zip"),
     (&["gz"], "application/gzip"),
@@ -136,7 +142,10 @@ const EXTENSION_MAP: &[(&[&str], &str)] = &[
     (&["ogx"], "application/ogg"),
     (&["otf"], "font/otf"),
     (&["ppt"], "application/vnd.ms-powerpoint"),
-    (&["pptx"], "application/vnd.openxmlformats-officedocument.presentationml.presentation"),
+    (
+        &["pptx"],
+        "application/vnd.openxmlformats-officedocument.presentationml.presentation",
+    ),
     (&["rar"], "application/vnd.rar"),
     (&["rtf"], "application/rtf"),
     (&["sh"], "application/x-sh"),
@@ -164,4 +173,3 @@ fn get_mime_type(path: &Path) -> Option<&str> {
         .find(|(extensions, _)| extensions.iter().any(|e| e == &ext))
         .map(|(_, mime)| *mime)
 }
-

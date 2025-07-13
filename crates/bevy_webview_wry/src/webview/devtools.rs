@@ -1,7 +1,6 @@
 use crate::webview::WryWebViews;
 use bevy::prelude::{
-    App, Commands, Component, DetectChanges, Entity, NonSend, Plugin,
-    PostUpdate, Query, Reflect,
+    App, Commands, Component, DetectChanges, Entity, NonSend, Plugin, PostUpdate, Query, Reflect,
     ReflectComponent,
 };
 use bevy_webview_core::prelude::{IsOpenDevtools, UseDevtools};

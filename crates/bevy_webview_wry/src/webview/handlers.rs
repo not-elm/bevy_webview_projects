@@ -1,20 +1,14 @@
 //! Controls `wry` event handlers.
 
-use crate::prelude::{NewWindowResponse, OnDownload, OnDragDrop, OnNavigation, OnNewWindowRequest, PassedUrl};
-use crate::webview::handlers::document_title_changed::{
-    DocumentTitleChanged, DocumentTitlePlugin,
+use crate::prelude::{
+    NewWindowResponse, OnDownload, OnDragDrop, OnNavigation, OnNewWindowRequest, PassedUrl,
 };
-use crate::webview::handlers::download::{
-    DownloadCompleted, DownloadPlugin, DownloadStarted,
-};
+use crate::webview::handlers::document_title_changed::{DocumentTitleChanged, DocumentTitlePlugin};
+use crate::webview::handlers::download::{DownloadCompleted, DownloadPlugin, DownloadStarted};
 use crate::webview::handlers::dragdrop::{DragDropPlugin, WryDragDrop};
 use crate::webview::handlers::navigation::{Navigated, NavigationPlugin};
-use crate::webview::handlers::new_window_request::{
-    NewWindowRequested, NewWindowRequestedPlugin,
-};
-use crate::webview::handlers::page_load::{
-    PageLoadFinished, PageLoadPlugin, PageLoadStarted,
-};
+use crate::webview::handlers::new_window_request::{NewWindowRequested, NewWindowRequestedPlugin};
+use crate::webview::handlers::page_load::{PageLoadFinished, PageLoadPlugin, PageLoadStarted};
 use bevy::ecs::system::SystemParam;
 use bevy::math::IVec2;
 use bevy::prelude::{App, Entity, Event, EventWriter, Mut, Plugin, PreUpdate, Res, Resource};
@@ -301,29 +295,21 @@ fn convert_drag_drop_event(
     event: wry::DragDropEvent,
 ) -> Option<DragDropEvent> {
     match event {
-        wry::DragDropEvent::Enter { paths, position } => {
-            Some(DragDropEvent::Enter(DragEntered {
-                webview_entity,
-                paths,
-                position: IVec2::new(position.0, position.1),
-            }))
-        }
-        wry::DragDropEvent::Over { position } => {
-            Some(DragDropEvent::Over(DragOver {
-                webview_entity,
-                position: IVec2::new(position.0, position.1),
-            }))
-        }
-        wry::DragDropEvent::Drop { paths, position } => {
-            Some(DragDropEvent::Drop(Dropped {
-                webview_entity,
-                paths,
-                position: IVec2::new(position.0, position.1),
-            }))
-        }
-        wry::DragDropEvent::Leave => {
-            Some(DragDropEvent::Leave(DragLeave { webview_entity }))
-        }
+        wry::DragDropEvent::Enter { paths, position } => Some(DragDropEvent::Enter(DragEntered {
+            webview_entity,
+            paths,
+            position: IVec2::new(position.0, position.1),
+        })),
+        wry::DragDropEvent::Over { position } => Some(DragDropEvent::Over(DragOver {
+            webview_entity,
+            position: IVec2::new(position.0, position.1),
+        })),
+        wry::DragDropEvent::Drop { paths, position } => Some(DragDropEvent::Drop(Dropped {
+            webview_entity,
+            paths,
+            position: IVec2::new(position.0, position.1),
+        })),
+        wry::DragDropEvent::Leave => Some(DragDropEvent::Leave(DragLeave { webview_entity })),
         _ => None,
     }
 }

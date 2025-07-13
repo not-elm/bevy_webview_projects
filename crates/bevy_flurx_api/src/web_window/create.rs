@@ -28,9 +28,7 @@ struct WindowResolutionArgs {
     scale_factor_override: Option<f32>,
 }
 
-fn to_resolution(
-    resolution: Option<WindowResolutionArgs>,
-) -> WindowResolution {
+fn to_resolution(resolution: Option<WindowResolutionArgs>) -> WindowResolution {
     resolution
         .map(|r| {
             let mut resolution = WindowResolution::new(r.size.width, r.size.height);
@@ -72,7 +70,7 @@ struct Args {
 
 #[command(id = "FLURX|webWindow::create")]
 fn create(In(args): In<Args>) -> Action<Args> {
-    once::run(|In(args): In<Args>, mut commands: Commands, | {
+    once::run(|In(args): In<Args>, mut commands: Commands| {
         let mut entity_commands = commands.spawn((
             Window {
                 resolution: to_resolution(args.resolution),
@@ -117,5 +115,6 @@ fn create(In(args): In<Args>) -> Action<Args> {
         if let Some(theme) = args.theme {
             entity_commands.insert(theme);
         }
-    }).with(args)
+    })
+    .with(args)
 }

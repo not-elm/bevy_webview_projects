@@ -13,17 +13,7 @@ use serde::{Deserialize, Serialize};
 /// Default is 20(px).
 #[repr(transparent)]
 #[derive(
-    Debug,
-    Reflect,
-    Copy,
-    Clone,
-    Eq,
-    PartialEq,
-    Hash,
-    Component,
-    Default,
-    Serialize,
-    Deserialize
+    Debug, Reflect, Copy, Clone, Eq, PartialEq, Hash, Component, Default, Serialize, Deserialize,
 )]
 #[reflect(Component, Default, Serialize, Deserialize)]
 pub struct GripZone(pub u32);

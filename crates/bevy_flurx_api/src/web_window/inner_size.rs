@@ -1,7 +1,7 @@
-use bevy::prelude::In;
 use crate::macros::api_plugin;
 use crate::web_window::WebWinitWindowParams;
-use bevy_flurx::action::{once, Action};
+use bevy::prelude::In;
+use bevy_flurx::action::{Action, once};
 use bevy_flurx_ipc::prelude::*;
 use winit::dpi::PhysicalSize;
 
@@ -28,5 +28,8 @@ fn system(
 ) -> Option<PhysicalSize<u32>> {
     let window = web_views.bevy_window_mut(&identifier)?;
 
-    Some(PhysicalSize::new(window.physical_width(), window.physical_height()))
+    Some(PhysicalSize::new(
+        window.physical_width(),
+        window.physical_height(),
+    ))
 }

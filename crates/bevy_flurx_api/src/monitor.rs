@@ -1,4 +1,4 @@
-//!  Provides the utility apis to read the monitor information. 
+//!  Provides the utility apis to read the monitor information.
 
 mod availables;
 mod current;

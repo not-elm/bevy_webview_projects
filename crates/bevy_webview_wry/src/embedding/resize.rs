@@ -12,13 +12,14 @@ pub struct ResizePlugin;
 
 impl Plugin for ResizePlugin {
     fn build(&self, app: &mut App) {
-        app
-            .register_type::<ResizeMode>()
-            .add_systems(Update, (
+        app.register_type::<ResizeMode>().add_systems(
+            Update,
+            (
                 change_mouse_cursor_icon.run_if(not(input_pressed(MouseButton::Left))),
                 resize_bounds.run_if(input_pressed(MouseButton::Left)),
                 render_bounds,
-            ));
+            ),
+        );
     }
 }
 
@@ -55,7 +56,10 @@ fn change_mouse_cursor_icon(
 }
 
 fn resize_bounds(
-    mut webviews: Query<(&mut Bounds, &ResizeMode, &EmbedWithin, &Resizable), Without<CurrentMoving>>,
+    mut webviews: Query<
+        (&mut Bounds, &ResizeMode, &EmbedWithin, &Resizable),
+        Without<CurrentMoving>,
+    >,
     windows: Query<&Window>,
 ) {
     for (mut bounds, resize_mode, parent, resizable) in webviews.iter_mut() {
@@ -89,4 +93,3 @@ fn render_bounds(
         }
     }
 }
-

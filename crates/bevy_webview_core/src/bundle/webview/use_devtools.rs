@@ -8,6 +8,8 @@ use serde::{Deserialize, Serialize};
 ///
 /// Default is `false`.
 #[repr(transparent)]
-#[derive(Component, Clone, Debug, Eq, PartialEq, Hash, Default, Reflect, Serialize, Deserialize)]
+#[derive(
+    Component, Clone, Debug, Eq, PartialEq, Hash, Default, Reflect, Serialize, Deserialize,
+)]
 #[reflect(Component, Default, Serialize, Deserialize)]
 pub struct UseDevtools(pub bool);

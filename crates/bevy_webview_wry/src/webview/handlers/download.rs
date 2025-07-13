@@ -5,7 +5,6 @@ use crate::webview::handlers::RegisterWryEvent;
 use bevy::prelude::{App, Entity, Event, Plugin, Reflect};
 use std::path::PathBuf;
 
-
 /// Fired when a download is requested and allowed in the [`OnDownload`](crate::prelude::OnDownload) callback.
 ///
 /// Please see [`wry::WebViewBuilder::with_download_started_handler`] for detail.
@@ -43,10 +42,7 @@ pub(crate) struct DownloadPlugin;
 
 impl Plugin for DownloadPlugin {
     fn build(&self, app: &mut App) {
-        app
-            .register_wry_event::<DownloadStarted>()
+        app.register_wry_event::<DownloadStarted>()
             .register_wry_event::<DownloadCompleted>();
     }
 }
-
-

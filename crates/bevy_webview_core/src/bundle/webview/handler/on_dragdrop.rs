@@ -86,6 +86,3 @@ impl OnDragDrop {
         self.0.take()
     }
 }
-
-
-

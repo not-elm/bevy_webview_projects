@@ -1,32 +1,32 @@
 //! Provides the mechanism to control the window from the webview.
 
-mod title;
 mod center;
+mod create;
+mod focus;
 mod hide;
+mod inner_position;
 mod inner_size;
 mod is_decorated;
 mod is_focused;
 mod is_fullscreen;
-mod is_maximized;
 mod is_maximizable;
+mod is_maximized;
 mod is_minimizable;
 mod is_minimized;
 mod is_resizable;
 mod is_visible;
 mod maximize;
 mod minimize;
-mod show;
-mod set_decorations;
-mod set_window_mode;
-mod focus;
-mod un_focus;
+mod outer_position;
 mod set_cursor_hit_test;
+mod set_decorations;
+mod set_position;
+mod set_window_mode;
+mod show;
+mod title;
+mod un_focus;
 mod un_maximize;
 mod un_minimize;
-mod create;
-mod set_position;
-mod inner_position;
-mod outer_position;
 
 pub use crate::web_window::center::WebWindowCenterPlugin;
 pub use crate::web_window::create::WebWindowCreatePlugin;
@@ -128,12 +128,16 @@ impl PluginGroup for AllWebWindowPlugins {
 }
 #[derive(SystemParam)]
 struct WebWinitWindowParams<'w, 's> {
-    views: Query<'w, 's, (
-        Entity,
-        Option<&'static Name>,
-        Option<&'static mut Window>,
-        Option<&'static EmbedWithin>,
-    )>,
+    views: Query<
+        'w,
+        's,
+        (
+            Entity,
+            Option<&'static Name>,
+            Option<&'static mut Window>,
+            Option<&'static EmbedWithin>,
+        ),
+    >,
     windows: NonSend<'w, WinitWindows>,
 }
 

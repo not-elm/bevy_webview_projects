@@ -16,12 +16,7 @@ pub mod ipc_trigger;
 
 #[allow(missing_docs)]
 pub mod prelude {
-    pub use crate::{
-        component::*,
-        ipc_commands::*,
-        ipc_trigger::*,
-        FlurxIpcPlugin,
-    };
+    pub use crate::{FlurxIpcPlugin, component::*, ipc_commands::*, ipc_trigger::*};
     pub use bevy_flurx_ipc_macro::command;
     use serde::Serialize;
 
@@ -41,9 +36,6 @@ impl Plugin for FlurxIpcPlugin {
             app.add_plugins(FlurxPlugin);
         }
 
-        app.add_plugins((
-            FlurxIpcCommandPlugin,
-            IpcTriggerPlugin
-        ));
+        app.add_plugins((FlurxIpcCommandPlugin, IpcTriggerPlugin));
     }
 }

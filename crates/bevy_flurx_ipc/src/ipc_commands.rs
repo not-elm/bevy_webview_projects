@@ -1,7 +1,10 @@
 //! Defines the ipc commands and the queue to execute them.
 
 use crate::component::{IpcHandlers, WebviewEntity};
-use bevy::prelude::{App, Commands, Entity, Event, Plugin, Query, Reflect, ReflectDeserialize, ReflectSerialize, Res, Resource, Update};
+use bevy::prelude::{
+    App, Commands, Entity, Event, Plugin, Query, Reflect, ReflectDeserialize, ReflectSerialize,
+    Res, Resource, Update,
+};
 use serde::de::DeserializeOwned;
 use serde::{Deserialize, Serialize};
 use std::sync::{Arc, Mutex};
@@ -96,8 +99,7 @@ pub(crate) struct FlurxIpcCommandPlugin;
 
 impl Plugin for FlurxIpcCommandPlugin {
     fn build(&self, app: &mut App) {
-        app
-            .register_type::<WebviewEntity>()
+        app.register_type::<WebviewEntity>()
             .add_event::<IpcResolveEvent>()
             .init_resource::<IpcCommands>()
             .add_systems(Update, receive_ipc_commands);

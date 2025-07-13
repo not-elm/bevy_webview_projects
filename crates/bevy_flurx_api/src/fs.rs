@@ -1,19 +1,21 @@
 //! Provides mechanism to access file systems from webview.
 
-mod create_dir;
 mod copy_file;
+mod create_dir;
 mod exists;
+mod read_dir;
 mod read_file;
+mod remove_dir;
 mod remove_file;
 mod rename_file;
 mod write_file;
-mod remove_dir;
-mod read_dir;
 
 use crate::error::fs::NotPermittedPath;
 use crate::error::{ApiError, ApiResult};
 use bevy::app::{Plugin, PluginGroup, PluginGroupBuilder};
-use bevy::prelude::{Reflect, ReflectDefault, ReflectDeserialize, ReflectResource, ReflectSerialize, Res, Resource};
+use bevy::prelude::{
+    Reflect, ReflectDefault, ReflectDeserialize, ReflectResource, ReflectSerialize, Res, Resource,
+};
 pub use copy_file::FsCopyFilePlugin;
 pub use create_dir::FsCreateDirPlugin;
 pub use exists::FsExistsPlugin;
@@ -87,11 +89,11 @@ impl AllowPaths {
     ///     "./dir",
     /// ]);
     /// ```
-    pub fn new<P: Into<PathBuf>>(allows: impl IntoIterator<Item=P>) -> Self {
+    pub fn new<P: Into<PathBuf>>(allows: impl IntoIterator<Item = P>) -> Self {
         Self(allows.into_iter().map(|p| p.into()).collect())
     }
 
-    /// Adds a path that allows access to the file system. 
+    /// Adds a path that allows access to the file system.
     #[inline]
     pub fn add(&mut self, path: PathBuf) {
         self.0.push(path);
@@ -99,15 +101,13 @@ impl AllowPaths {
 
     /// Adds paths that allows access to the file system.
     #[inline]
-    pub fn add_all(&mut self, paths: impl IntoIterator<Item=PathBuf>) {
+    pub fn add_all(&mut self, paths: impl IntoIterator<Item = PathBuf>) {
         self.0.extend(paths);
     }
 
     fn check_accessible(&self, path: impl AsRef<Path>) -> bool {
         let path = path.as_ref();
-        self.0.iter().any(|allow_path| {
-            path.starts_with(allow_path)
-        })
+        self.0.iter().any(|allow_path| path.starts_with(allow_path))
     }
 }
 

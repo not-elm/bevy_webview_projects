@@ -1,9 +1,9 @@
 use bevy::log::error;
 use wry::WebViewBuilder;
 
+use crate::WryLocalRoot;
 use crate::prelude::{Csp, Webview};
 use crate::webview::protocol::{WryRequest, WryRequestSender};
-use crate::WryLocalRoot;
 
 pub fn feed_uri<'a>(
     builder: WebViewBuilder<'a>,
@@ -42,5 +42,3 @@ fn feed_custom_protocol(
         }
     })
 }
-
-

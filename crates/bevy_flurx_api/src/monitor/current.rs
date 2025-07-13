@@ -2,7 +2,7 @@ use crate::macros::api_plugin;
 use crate::monitor::{Monitor, PhysicalPosition, PhysicalSize};
 use bevy::prelude::{Entity, In, NonSend, Query};
 use bevy::winit::WinitWindows;
-use bevy_flurx::action::{once, Action};
+use bevy_flurx::action::{Action, once};
 use bevy_flurx::prelude::OmitInput;
 use bevy_flurx_ipc::component::WebviewEntity;
 use bevy_flurx_ipc::prelude::*;
@@ -22,7 +22,10 @@ api_plugin!(
 
 #[command(id = "FLURX|monitor::current")]
 fn current_monitor(WebviewEntity(entity): WebviewEntity) -> Action<(), Option<Monitor>> {
-    once::run(current_monitor_system).with(entity).omit_input().with(())
+    once::run(current_monitor_system)
+        .with(entity)
+        .omit_input()
+        .with(())
 }
 
 //noinspection DuplicatedCode
@@ -37,22 +40,17 @@ fn current_monitor_system(
         entity
     };
 
-    web_views.get_window(entity)?
-        .current_monitor()
-        .map(|m| {
-            let size = m.size();
-            let p = m.position();
-            Monitor {
-                name: m.name(),
-                size: PhysicalSize {
-                    width: size.width,
-                    height: size.height,
-                },
-                position: PhysicalPosition {
-                    x: p.x,
-                    y: p.y,
-                },
-                scale_factor: m.scale_factor(),
-            }
-        })
+    web_views.get_window(entity)?.current_monitor().map(|m| {
+        let size = m.size();
+        let p = m.position();
+        Monitor {
+            name: m.name(),
+            size: PhysicalSize {
+                width: size.width,
+                height: size.height,
+            },
+            position: PhysicalPosition { x: p.x, y: p.y },
+            scale_factor: m.scale_factor(),
+        }
+    })
 }

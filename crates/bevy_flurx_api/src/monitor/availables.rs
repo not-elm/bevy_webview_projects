@@ -2,7 +2,7 @@ use crate::macros::api_plugin;
 use crate::monitor::{Monitor, PhysicalPosition, PhysicalSize};
 use bevy::prelude::{Entity, In, NonSend, Query};
 use bevy::winit::WinitWindows;
-use bevy_flurx::action::{once, Action};
+use bevy_flurx::action::{Action, once};
 use bevy_flurx::prelude::OmitInput;
 use bevy_flurx_ipc::component::WebviewEntity;
 use bevy_flurx_ipc::prelude::*;
@@ -22,7 +22,10 @@ api_plugin!(
 
 #[command(id = "FLURX|monitor::availables")]
 fn available_monitors(WebviewEntity(entity): WebviewEntity) -> Action<(), Vec<Monitor>> {
-    once::run(available_monitors_system).with(entity).omit_input().with(())
+    once::run(available_monitors_system)
+        .with(entity)
+        .omit_input()
+        .with(())
 }
 
 //noinspection DuplicatedCode
@@ -39,8 +42,7 @@ fn available_monitors_system(
     let Some(win) = web_views.get_window(entity) else {
         return Vec::with_capacity(0);
     };
-    win
-        .available_monitors()
+    win.available_monitors()
         .map(|m| {
             let size = m.size();
             let p = m.position();
@@ -50,10 +52,7 @@ fn available_monitors_system(
                     width: size.width,
                     height: size.height,
                 },
-                position: PhysicalPosition {
-                    x: p.x,
-                    y: p.y,
-                },
+                position: PhysicalPosition { x: p.x, y: p.y },
                 scale_factor: m.scale_factor(),
             }
         })

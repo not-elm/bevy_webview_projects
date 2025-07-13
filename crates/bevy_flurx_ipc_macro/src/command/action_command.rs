@@ -4,17 +4,13 @@ use quote::quote;
 use syn::__private::TokenStream2;
 use syn::{FnArg, ItemFn, Type};
 
-pub fn expand_action_command(
-    f: &ItemFn,
-) -> TokenStream2 {
+pub fn expand_action_command(f: &ItemFn) -> TokenStream2 {
     let fn_ident = &f.sig.ident;
     let inputs = parse_action_command_inputs(f);
     _expand_action_command(quote! { #fn_ident(#(#inputs,)*) })
 }
 
-fn _expand_action_command(
-    f: TokenStream2,
-) -> TokenStream2 {
+fn _expand_action_command(f: TokenStream2) -> TokenStream2 {
     quote! {
         commands.spawn(bevy_flurx::prelude::Reactor::schedule(move |task| async move{
             use bevy_flurx::prelude::{Map, Pipe};
@@ -32,14 +28,11 @@ fn _expand_action_command(
 
 fn parse_action_command_inputs(f: &ItemFn) -> Vec<TokenStream> {
     let mut inputs = Vec::with_capacity(2);
-    for arg in f
-        .sig
-        .inputs
-        .iter() {
+    for arg in f.sig.inputs.iter() {
         let FnArg::Typed(pat_type) = arg else {
             continue;
         };
-        let Type::Path(path) = &*pat_type.ty  else {
+        let Type::Path(path) = &*pat_type.ty else {
             continue;
         };
         let Some(last_segment) = path.path.segments.last() else {

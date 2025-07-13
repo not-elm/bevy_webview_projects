@@ -3,9 +3,9 @@
 mod open;
 mod save;
 
+use crate::macros::api_plugin;
 use bevy::app::PluginGroupBuilder;
 use bevy::prelude::{In, PluginGroup};
-use crate::macros::api_plugin;
 use bevy_flurx::action::once;
 use bevy_flurx::prelude::Action;
 use bevy_flurx_ipc::prelude::*;
@@ -106,29 +106,20 @@ impl DialogLevel {
 
 #[command(id = "FLURX|dialog::ask")]
 fn ask(In(args): In<Args>) -> Action<Args, bool> {
-    once::run(|In(args): In<Args>| {
-        ask_system(args, MessageButtons::YesNo)
-    }).with(args)
+    once::run(|In(args): In<Args>| ask_system(args, MessageButtons::YesNo)).with(args)
 }
 
 #[command(id = "FLURX|dialog::confirm")]
 fn confirm(In(args): In<Args>) -> Action<Args, bool> {
-    once::run(|In(args): In<Args>| {
-        ask_system(args, MessageButtons::OkCancel)
-    }).with(args)
+    once::run(|In(args): In<Args>| ask_system(args, MessageButtons::OkCancel)).with(args)
 }
 
 #[command(id = "FLURX|dialog::message")]
 fn message(In(args): In<Args>) -> Action<Args, bool> {
-    once::run(|In(args): In<Args>| {
-        ask_system(args, MessageButtons::Ok)
-    }).with(args)
+    once::run(|In(args): In<Args>| ask_system(args, MessageButtons::Ok)).with(args)
 }
 
-fn ask_system(
-    args: Args,
-    buttons: MessageButtons,
-) -> bool {
+fn ask_system(args: Args, buttons: MessageButtons) -> bool {
     let mut dialog = rfd::MessageDialog::new();
     if let Some(title) = args.title {
         dialog = dialog.set_title(title);
@@ -141,6 +132,8 @@ fn ask_system(
         .set_description(args.question_message)
         .set_buttons(buttons)
         .show();
-    matches!(dialog_result, MessageDialogResult::Ok | MessageDialogResult::Yes)
+    matches!(
+        dialog_result,
+        MessageDialogResult::Ok | MessageDialogResult::Yes
+    )
 }
-

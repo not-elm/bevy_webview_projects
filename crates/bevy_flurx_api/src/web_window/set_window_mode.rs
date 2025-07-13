@@ -2,7 +2,7 @@ use crate::macros::api_plugin;
 use crate::web_window::WebWinitWindowParams;
 use bevy::prelude::{In, MonitorSelection, VideoModeSelection};
 use bevy::window::WindowMode;
-use bevy_flurx::action::{once, Action};
+use bevy_flurx::action::{Action, once};
 use bevy_flurx_ipc::prelude::*;
 use serde::Deserialize;
 
@@ -33,16 +33,15 @@ fn set_window_mode(In(args): In<Args>) -> Action<Args> {
     once::run(system).with(args)
 }
 
-fn system(
-    In(args): In<Args>,
-    mut web_views: WebWinitWindowParams,
-) {
+fn system(In(args): In<Args>, mut web_views: WebWinitWindowParams) {
     let Some(mut window) = web_views.bevy_window_mut(&args.0) else {
         return;
     };
     window.mode = match args.1 {
-        VideoModeState::Fullscreen => WindowMode::Fullscreen(MonitorSelection::Current, VideoModeSelection::Current),
+        VideoModeState::Fullscreen => {
+            WindowMode::Fullscreen(MonitorSelection::Current, VideoModeSelection::Current)
+        }
         VideoModeState::Borderless => WindowMode::BorderlessFullscreen(MonitorSelection::Current),
-        VideoModeState::Windowed => WindowMode::Windowed
+        VideoModeState::Windowed => WindowMode::Windowed,
     };
 }

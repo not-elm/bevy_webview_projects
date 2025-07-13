@@ -2,7 +2,7 @@ use crate::error::ApiResult;
 use crate::macros::api_plugin;
 use crate::web_window::WebWinitWindowParams;
 use bevy::prelude::In;
-use bevy_flurx::action::{once, Action};
+use bevy_flurx::action::{Action, once};
 use bevy_flurx_ipc::prelude::*;
 
 api_plugin!(
@@ -24,10 +24,7 @@ fn set_cursor_hit_test(In(args): In<Args>) -> Action<Args, ApiResult> {
     once::run(system).with(args)
 }
 
-fn system(
-    In(args): In<Args>,
-    web_views: WebWinitWindowParams,
-) -> ApiResult {
+fn system(In(args): In<Args>, web_views: WebWinitWindowParams) -> ApiResult {
     let Some(window) = web_views.winit_window(&args.0) else {
         return Ok(());
     };

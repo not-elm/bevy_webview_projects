@@ -1,6 +1,6 @@
 //! Testing to return result type from the actions.
 
-use bevy_flurx::action::{once, Action};
+use bevy_flurx::action::{Action, once};
 use bevy_flurx_ipc::prelude::*;
 
 #[command]
@@ -14,8 +14,5 @@ async fn async_command() -> Result<String, String> {
 }
 
 fn main() {
-    IpcHandlers::new([
-        action_command,
-        async_command,
-    ]);
+    IpcHandlers::new([action_command, async_command]);
 }

@@ -1,13 +1,16 @@
+use crate::WryLocalRoot;
 use crate::prelude::{Csp, Webview};
 use crate::prelude::{InitializationScripts, WebviewInitialized};
 use crate::util::as_wry_rect;
+use crate::webview::WryWebViews;
 use crate::webview::handlers::{HandlerQueries, WryEventParams};
 use crate::webview::load_webview::ipc::IpcHandlerParams;
 use crate::webview::load_webview::protocol::feed_uri;
 use crate::webview::protocol::WryRequestSender;
-use crate::webview::WryWebViews;
-use crate::WryLocalRoot;
-use bevy::prelude::{App, Commands, Entity, Name, NonSend, NonSendMut, Or, Plugin, PreUpdate, Query, Res, Window, With, Without};
+use bevy::prelude::{
+    App, Commands, Entity, Name, NonSend, NonSendMut, Or, Plugin, PreUpdate, Query, Res, Window,
+    With, Without,
+};
 use bevy::winit::WinitWindows;
 use bevy_webview_core::bundle::embedding::{Bounds, EmbedWithin};
 use bevy_webview_core::prelude::*;
@@ -29,9 +32,11 @@ impl Plugin for LoadWebviewPlugin {
         #[cfg(target_os = "macos")]
         {
             use bevy::prelude::IntoScheduleConfigs;
-            app.add_systems(PreUpdate, (
-                resize_webview_inner_window.run_if(bevy::prelude::on_event::<bevy::window::WindowResized>),
-            ));
+            app.add_systems(
+                PreUpdate,
+                (resize_webview_inner_window
+                    .run_if(bevy::prelude::on_event::<bevy::window::WindowResized>),),
+            );
         }
     }
 }
@@ -109,7 +114,11 @@ fn load_web_views(
         // Safety: Ensure that attach the winit window to webview.
         unsafe {
             if embed_within.is_none() {
-                attach_inner_window(configs1.4.is_transparent(), &webview.ns_window(), &webview.webview());
+                attach_inner_window(
+                    configs1.4.is_transparent(),
+                    &webview.ns_window(),
+                    &webview.webview(),
+                );
             }
         }
         commands
@@ -174,7 +183,11 @@ fn feed_configs2<'a>(
     let mut builder = builder
         .with_focused(focused.0)
         .with_hotkeys_zoom(hotkeys_zoom.0)
-        .with_initialization_script(initialization_script(initialization_scripts, &identifier, is_embedded));
+        .with_initialization_script(initialization_script(
+            initialization_scripts,
+            &identifier,
+            is_embedded,
+        ));
     if let Some(user_agent) = user_agent.0.as_ref() {
         builder = builder.with_user_agent(user_agent);
     }
@@ -187,11 +200,9 @@ fn initialization_script(
     identifier: &str,
     is_embedded: bool,
 ) -> String {
-    let s1 = include_str!("../../scripts/windowIdentifier.js").replace("<WINDOW_IDENTIFIER>", identifier);
-    let mut scripts = vec![
-        include_str!("../../scripts/bevy_flurx_api.js"),
-        &s1,
-    ];
+    let s1 = include_str!("../../scripts/windowIdentifier.js")
+        .replace("<WINDOW_IDENTIFIER>", identifier);
+    let mut scripts = vec![include_str!("../../scripts/bevy_flurx_api.js"), &s1];
     if is_embedded {
         scripts.push(include_str!("../../scripts/gripZone.js"));
         #[cfg(target_os = "linux")]
@@ -214,7 +225,7 @@ fn feed_platform_configs<'a>(
             match theme {
                 Theme::Auto => wry::Theme::Auto,
                 Theme::Light => wry::Theme::Light,
-                Theme::Dark => wry::Theme::Dark
+                Theme::Dark => wry::Theme::Dark,
             }
         }
         use wry::WebViewBuilderExtWindows;
@@ -265,16 +276,16 @@ unsafe fn attach_inner_window(
 
         webview.removeFromSuperview();
         webview.setAutoresizingMask(
-            NSAutoresizingMaskOptions::ViewHeightSizable |
-                NSAutoresizingMaskOptions::ViewWidthSizable,
+            NSAutoresizingMaskOptions::ViewHeightSizable
+                | NSAutoresizingMaskOptions::ViewWidthSizable,
         );
 
         let mtw = objc2_foundation::MainThreadMarker::new().unwrap();
         let inner_window = objc2_app_kit::NSPanel::new(mtw);
         inner_window.setTitle(&objc2_foundation::NSString::from_str(""));
         inner_window.setStyleMask(
-            objc2_app_kit::NSWindowStyleMask::Titled |
-                objc2_app_kit::NSWindowStyleMask::FullSizeContentView
+            objc2_app_kit::NSWindowStyleMask::Titled
+                | objc2_app_kit::NSWindowStyleMask::FullSizeContentView,
         );
         if is_transparent {
             inner_window.setOpaque(false);
@@ -294,14 +305,19 @@ unsafe fn attach_inner_window(
         inner_window.becomeKeyWindow();
         inner_window.makeFirstResponder(Some(webview));
 
-        application_window.addChildWindow_ordered(&inner_window, objc2_app_kit::NSWindowOrderingMode::Above);
+        application_window
+            .addChildWindow_ordered(&inner_window, objc2_app_kit::NSWindowOrderingMode::Above);
         application_window.makeFirstResponder(Some(&inner_window));
 
         inner_window.makeKeyAndOrderFront(None);
 
         use objc2_app_kit::NSApplication;
         let app = NSApplication::sharedApplication(mtw);
-        if objc2_foundation::NSProcessInfo::processInfo().operatingSystemVersion().majorVersion >= 14 {
+        if objc2_foundation::NSProcessInfo::processInfo()
+            .operatingSystemVersion()
+            .majorVersion
+            >= 14
+        {
             NSApplication::activate(&app);
         } else {
             #[allow(deprecated)]
@@ -334,11 +350,13 @@ fn resize_webview_inner_window(
         // that the `AppKitWindowHandle` contains a valid pointer to an
         // `NSView`.
         // Unwrap is fine, since the pointer came from `NonNull`.
-        let ns_view: objc2::rc::Retained<objc2_app_kit::NSView> = unsafe { objc2::rc::Retained::retain(ns_view.cast()) }.unwrap();
+        let ns_view: objc2::rc::Retained<objc2_app_kit::NSView> =
+            unsafe { objc2::rc::Retained::retain(ns_view.cast()) }.unwrap();
         let Some(ns_window) = ns_view.window() else {
             continue;
         };
-        wry_webview.ns_window().setFrame_display(ns_window.contentRectForFrameRect(ns_window.frame()), true);
+        wry_webview
+            .ns_window()
+            .setFrame_display(ns_window.contentRectForFrameRect(ns_window.frame()), true);
     }
 }
-

@@ -14,8 +14,8 @@ fn main() {
         .add_plugins((
             DefaultPlugins,
             WebviewWryPlugin {
-                local_root: PathBuf::from("ui").join("ipc_trigger")
-            }
+                local_root: PathBuf::from("ui").join("ipc_trigger"),
+            },
         ))
         .add_ipc_trigger::<MessageFromWebview>("message")
         .add_systems(Startup, spawn_webview)
@@ -23,11 +23,10 @@ fn main() {
         .run();
 }
 
-fn spawn_webview(
-    mut commands: Commands,
-    window: Query<Entity, With<PrimaryWindow>>,
-) {
-    commands.entity(window.single().expect("Window wasn't found")).insert(Webview::default());
+fn spawn_webview(mut commands: Commands, window: Query<Entity, With<PrimaryWindow>>) {
+    commands
+        .entity(window.single().expect("Window wasn't found"))
+        .insert(Webview::default());
 }
 
 #[derive(Deserialize, Debug, Event)]
@@ -35,8 +34,6 @@ struct MessageFromWebview {
     message: String,
 }
 
-fn apply_webview_message(
-    trigger: Trigger<MessageFromWebview>,
-) {
+fn apply_webview_message(trigger: Trigger<MessageFromWebview>) {
     info!("message from webview: {}", trigger.message);
 }

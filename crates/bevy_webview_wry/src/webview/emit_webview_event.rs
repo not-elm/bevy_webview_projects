@@ -26,7 +26,6 @@ impl EventPayload {
     }
 }
 
-
 pub(crate) struct EventEmitterPlugin;
 
 impl Plugin for EventEmitterPlugin {

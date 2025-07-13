@@ -1,8 +1,8 @@
 use crate::error::ApiResult;
-use crate::fs::{error_if_not_accessible, join_path_if_need, AllowPaths, BaseDirectory};
+use crate::fs::{AllowPaths, BaseDirectory, error_if_not_accessible, join_path_if_need};
 use crate::macros::api_plugin;
 use bevy::prelude::{In, Res};
-use bevy_flurx::action::{once, Action};
+use bevy_flurx::action::{Action, once};
 use bevy_flurx_ipc::prelude::*;
 use serde::Deserialize;
 use std::path::PathBuf;
@@ -60,21 +60,17 @@ fn read_binary_file_system(
     Ok(std::fs::read(path)?)
 }
 
-fn read_text_file_system(
-    In(args): In<Args>,
-    scope: Option<Res<AllowPaths>>,
-) -> ApiResult<String> {
+fn read_text_file_system(In(args): In<Args>, scope: Option<Res<AllowPaths>>) -> ApiResult<String> {
     let path = join_path_if_need(&args.dir, args.path);
     error_if_not_accessible(&path, &scope)?;
     Ok(std::fs::read_to_string(path)?)
 }
 
-
 #[cfg(test)]
 //noinspection DuplicatedCode
 mod tests {
-    use crate::fs::read_file::{read_text_file_system, Args};
     use crate::fs::AllowPaths;
+    use crate::fs::read_file::{Args, read_text_file_system};
     use crate::tests::test_app;
     use bevy::prelude::*;
     use bevy::utils::default;
@@ -89,10 +85,15 @@ mod tests {
                 let tmp_dir = std::env::temp_dir();
                 let hoge_path = tmp_dir.join("read_text_file_read_text_file.txt");
                 std::fs::write(&hoge_path, "hoge").unwrap();
-                let result: Result<String, _> = task.will(Update, once::run(read_text_file_system).with(Args {
-                    path: hoge_path,
-                    ..default()
-                })).await;
+                let result: Result<String, _> = task
+                    .will(
+                        Update,
+                        once::run(read_text_file_system).with(Args {
+                            path: hoge_path,
+                            ..default()
+                        }),
+                    )
+                    .await;
                 assert_eq!(result.unwrap(), "hoge");
             }));
         });
@@ -107,13 +108,16 @@ mod tests {
                 let tmp_dir = std::env::temp_dir();
                 let hoge_path = tmp_dir.join("read_text_file_read_text_file2.txt");
                 std::fs::write(&hoge_path, "hoge").unwrap();
-                let result: Result<String, _> = task.will(Update, {
-                    once::res::insert().with(AllowPaths::default())
-                        .then(once::run(read_text_file_system).with(Args {
-                            path: hoge_path,
-                            ..default()
-                        }))
-                }).await;
+                let result: Result<String, _> = task
+                    .will(Update, {
+                        once::res::insert().with(AllowPaths::default()).then(
+                            once::run(read_text_file_system).with(Args {
+                                path: hoge_path,
+                                ..default()
+                            }),
+                        )
+                    })
+                    .await;
                 result.unwrap_err();
             }));
         });

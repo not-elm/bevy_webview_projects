@@ -2,7 +2,9 @@
 
 use crate::prelude::{PassedUrl, Webview, WebviewUri};
 use crate::webview::handlers::{RegisterWryEvent, WryEvents};
-use bevy::prelude::{App, Commands, Entity, Event, EventWriter, Plugin, PreUpdate, Reflect, Res, Window};
+use bevy::prelude::{
+    App, Commands, Entity, Event, EventWriter, Plugin, PreUpdate, Reflect, Res, Window,
+};
 
 /// The event indicating that a new window has been opened.
 ///
@@ -30,8 +32,7 @@ pub(crate) struct NewWindowRequestedPlugin;
 
 impl Plugin for NewWindowRequestedPlugin {
     fn build(&self, app: &mut App) {
-        app
-            .register_type::<NewWindowRequested>()
+        app.register_type::<NewWindowRequested>()
             .add_event::<NewWindowRequested>()
             .init_resource::<WryEvents<NewWindowRequested>>()
             .register_wry_event::<NewWindowOpened>()

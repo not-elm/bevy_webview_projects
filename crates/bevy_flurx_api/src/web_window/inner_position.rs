@@ -1,7 +1,7 @@
 use crate::macros::api_plugin;
 use crate::web_window::WebWinitWindowParams;
 use bevy::prelude::In;
-use bevy_flurx::action::{once, Action};
+use bevy_flurx::action::{Action, once};
 use bevy_flurx_ipc::prelude::*;
 use winit::dpi::PhysicalPosition;
 
@@ -24,10 +24,7 @@ fn inner_position(In(args): In<Args>) -> Action<Args, Option<PhysicalPosition<i3
     once::run(system).with(args)
 }
 
-fn system(
-    In(args): In<Args>,
-    web_views: WebWinitWindowParams,
-) -> Option<PhysicalPosition<i32>> {
+fn system(In(args): In<Args>, web_views: WebWinitWindowParams) -> Option<PhysicalPosition<i32>> {
     let window = web_views.winit_window(&args)?;
     window.inner_position().ok()
 }

@@ -31,12 +31,9 @@ mod protocol;
 #[allow(missing_docs)]
 pub mod prelude {
     pub use crate::webview::{
-        emit_webview_event::{
-            EmitIpcEvent,
-            EventPayload,
-        },
-        handlers::prelude::*,
         WryWebViews,
+        emit_webview_event::{EmitIpcEvent, EventPayload},
+        handlers::prelude::*,
     };
 }
 
@@ -48,24 +45,23 @@ impl Plugin for WebviewPlugin {
             app.add_plugins(FlurxIpcPlugin);
         }
 
-        app
-            .add_plugins((
-                LoadWebviewPlugin,
-                VisiblePlugin,
-                EventEmitterPlugin,
-                IpcResolvePlugin,
-                WryHandlersPlugin,
-                CustomProtocolPlugin,
-                #[cfg(any(
-                    target_os = "linux",
-                    target_os = "dragonfly",
-                    target_os = "freebsd",
-                    target_os = "netbsd",
-                    target_os = "openbsd",
-                ))]
-                linux::WebviewSupportLinuxPlugin,
-            ))
-            .init_non_send_resource::<WryWebViews>();
+        app.add_plugins((
+            LoadWebviewPlugin,
+            VisiblePlugin,
+            EventEmitterPlugin,
+            IpcResolvePlugin,
+            WryHandlersPlugin,
+            CustomProtocolPlugin,
+            #[cfg(any(
+                target_os = "linux",
+                target_os = "dragonfly",
+                target_os = "freebsd",
+                target_os = "netbsd",
+                target_os = "openbsd",
+            ))]
+            linux::WebviewSupportLinuxPlugin,
+        ))
+        .init_non_send_resource::<WryWebViews>();
 
         #[cfg(debug_assertions)]
         app.add_plugins(devtools::DevtoolsPlugin);

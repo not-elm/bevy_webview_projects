@@ -1,9 +1,9 @@
 use crate::macros::api_plugin;
 use crate::web_window::WebWinitWindowParams;
 use bevy::prelude::In;
-use bevy_flurx::action::{once, Action};
-use winit::window::WindowButtons;
+use bevy_flurx::action::{Action, once};
 use bevy_flurx_ipc::prelude::*;
+use winit::window::WindowButtons;
 
 api_plugin!(
     /// You'll be able to get the window is minimizable from a webview.
@@ -22,10 +22,7 @@ fn is_minimizable(In(args): In<String>) -> Action<String, bool> {
     once::run(system).with(args)
 }
 
-fn system(
-    In(identifier): In<String>,
-    web_views: WebWinitWindowParams,
-) -> bool {
+fn system(In(identifier): In<String>, web_views: WebWinitWindowParams) -> bool {
     let Some(window) = web_views.winit_window(&identifier) else {
         return false;
     };

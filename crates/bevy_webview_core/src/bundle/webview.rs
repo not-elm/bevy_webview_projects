@@ -23,20 +23,20 @@ pub use webview_uri::*;
 mod auto_play;
 mod background;
 mod browser_accelerator_keys;
+mod csp;
 mod enable_clipboard;
 mod focused;
 mod handler;
 mod hotkeys_zoom;
 mod https_scheme;
 mod incognito;
+mod initialization_script;
 mod is_open_devtools;
 mod theme;
 mod use_devtools;
 mod user_agent;
 mod visible;
 mod webview_uri;
-mod csp;
-mod initialization_script;
 
 /// The following is a list of required components for generating a webview.
 ///

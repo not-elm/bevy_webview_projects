@@ -14,8 +14,8 @@ fn main() {
         .add_plugins((
             DefaultPlugins,
             WebviewWryPlugin {
-                local_root: PathBuf::from("ui").join("ipc_command")
-            }
+                local_root: PathBuf::from("ui").join("ipc_command"),
+            },
         ))
         .add_systems(Startup, spawn_webview)
         .run();
@@ -24,19 +24,15 @@ fn main() {
 #[derive(Component)]
 struct Num(usize);
 
-fn spawn_webview(
-    mut commands: Commands,
-    window: Query<Entity, With<PrimaryWindow>>,
-) {
-    commands.entity(window.single().expect("Parent window was not found")).insert((
-        Num(1),
-        // Display `assets/ui/ipc_command/index.html` within the webview
-        Webview::default(),
-        IpcHandlers::new([
-            action_command,
-            async_command
-        ]),
-    ));
+fn spawn_webview(mut commands: Commands, window: Query<Entity, With<PrimaryWindow>>) {
+    commands
+        .entity(window.single().expect("Parent window was not found"))
+        .insert((
+            Num(1),
+            // Display `assets/ui/ipc_command/index.html` within the webview
+            Webview::default(),
+            IpcHandlers::new([action_command, async_command]),
+        ));
 }
 
 /// Input args are optional.
@@ -55,13 +51,11 @@ async fn async_command(
     WebviewEntity(entity): WebviewEntity,
     task: ReactorTask,
 ) -> usize {
-    task.will(Update, once::run(fibonacci).with((entity, n))).await
+    task.will(Update, once::run(fibonacci).with((entity, n)))
+        .await
 }
 
-fn fibonacci(
-    In((webview_entity, n)): In<(Entity, usize)>,
-    mut views: Query<&mut Num>,
-) -> usize {
+fn fibonacci(In((webview_entity, n)): In<(Entity, usize)>, mut views: Query<&mut Num>) -> usize {
     if let Ok(mut num) = views.get_mut(webview_entity) {
         let out = num.0 + n;
         num.0 = n;

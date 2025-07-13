@@ -13,10 +13,13 @@ fn main() {
             DefaultPlugins,
             AllWebWindowPlugins,
             WebviewWryPlugin {
-                local_root: PathBuf::from("ui").join("emit_event_to_webview")
-            }
+                local_root: PathBuf::from("ui").join("emit_event_to_webview"),
+            },
         ))
-        .insert_resource(CountTimer(Timer::new(Duration::from_secs(1), TimerMode::Repeating)))
+        .insert_resource(CountTimer(Timer::new(
+            Duration::from_secs(1),
+            TimerMode::Repeating,
+        )))
         .add_systems(Startup, spawn_webview)
         .add_systems(Update, emit_event)
         .run();
@@ -25,12 +28,11 @@ fn main() {
 #[derive(Resource)]
 struct CountTimer(Timer);
 
-fn spawn_webview(
-    mut commands: Commands,
-    window: Query<Entity, With<PrimaryWindow>>,
-) {
+fn spawn_webview(mut commands: Commands, window: Query<Entity, With<PrimaryWindow>>) {
     // Display `assets/ui/event_emit/index.html` within the webview.
-    commands.entity(window.single().expect("Window wasn't found")).insert(Webview::default());
+    commands
+        .entity(window.single().expect("Window wasn't found"))
+        .insert(Webview::default());
 }
 
 fn emit_event(

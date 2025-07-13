@@ -12,8 +12,7 @@ pub(crate) struct DragDropPlugin;
 
 impl Plugin for DragDropPlugin {
     fn build(&self, app: &mut App) {
-        app
-            .init_resource::<WryEvents<WryDragDrop>>()
+        app.init_resource::<WryEvents<WryDragDrop>>()
             .add_systems(PreUpdate, send_dragdrop_event);
     }
 }

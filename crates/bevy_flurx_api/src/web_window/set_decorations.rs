@@ -1,7 +1,7 @@
 use crate::macros::api_plugin;
 use crate::web_window::WebWinitWindowParams;
 use bevy::prelude::In;
-use bevy_flurx::action::{once, Action};
+use bevy_flurx::action::{Action, once};
 use bevy_flurx_ipc::prelude::*;
 
 api_plugin!(
@@ -23,10 +23,7 @@ fn set_decorations(In(args): In<Args>) -> Action<Args> {
     once::run(system).with(args)
 }
 
-fn system(
-    In(args): In<Args>,
-    mut web_views: WebWinitWindowParams,
-) {
+fn system(In(args): In<Args>, mut web_views: WebWinitWindowParams) {
     let Some(mut window) = web_views.bevy_window_mut(&args.0) else {
         return;
     };
