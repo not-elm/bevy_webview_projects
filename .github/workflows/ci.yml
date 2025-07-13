@@ -21,7 +21,6 @@ jobs:
       - name: Toolchain
         uses: dtolnay/rust-toolchain@stable
         with:
-          toolchain: 'nightly'
           components: 'clippy,rust-docs'
 
       - name: Install alsa and udev
