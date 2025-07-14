@@ -6,7 +6,7 @@ use crate::webview::protocol::asset::{
 use bevy::app::{App, Plugin};
 use bevy::platform::collections::hash_map::HashMap;
 use bevy::prelude::*;
-use bevy_webview_core::prelude::Csp;
+use bevy_webview_core::prelude::{Csp, Webview};
 use std::path::PathBuf;
 use std::sync::mpsc::{Receiver, Sender};
 use wry::RequestAsyncResponder;
@@ -89,7 +89,8 @@ fn response(
 fn hot_reload(
     mut er: EventReader<AssetEvent<WryResponseBody>>,
     wry_webviews: NonSend<crate::prelude::WryWebViews>,
-    webviews: Query<(Entity, &WryResponseHandle)>,
+    webviews: Query<(Entity, &WryResponseHandle), With<Webview>>,
+    asset_server: Res<AssetServer>,
 ) {
     for event in er.read() {
         if let AssetEvent::Modified { id } = event
@@ -98,6 +99,9 @@ fn hot_reload(
                 .find_map(|(entity, handle)| (id == &handle.0.id()).then_some(entity))
             && let Some(webview) = wry_webviews.get(&webview_entity)
         {
+            if let Some(path) = asset_server.get_path(*id) {
+                info!("Reloading webview {webview_entity}: {path:?}");
+            }
             if let Err(e) = webview.reload() {
                 warn!("Failed to reload webview {webview_entity}: {e}");
             }
