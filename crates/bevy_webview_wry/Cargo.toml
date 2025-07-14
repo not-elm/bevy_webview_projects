@@ -11,9 +11,10 @@ repository.workspace = true
 edition.workspace = true
 
 [features]
-default = ["child_window", "api"]
+default = ["child_window", "api", "hot-reload"]
 child_window = ["dep:bevy_child_window"]
 api = ["dep:bevy_flurx_api"]
+hot-reload = ["bevy/file_watcher"]
 
 [dependencies]
 bevy = { workspace = true, features = [
@@ -49,7 +50,7 @@ gtk = { version = "0.18" }
 rfd = { version = "0.15", default-features = false, features = ["gtk3"] }
 
 [dev-dependencies]
-bevy = "0.16"
+bevy = { version = "0.16", features = ["file_watcher"] }
 bevy_flurx = "0.11"
 bevy_flurx_ipc = { path = "../bevy_flurx_ipc" }
 serde = { workspace = true }

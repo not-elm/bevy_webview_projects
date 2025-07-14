@@ -192,7 +192,14 @@ fn feed_configs2<'a>(
         builder = builder.with_user_agent(user_agent);
     }
 
-    feed_uri(builder, uri, local_root, csp.cloned(), request_sender)
+    feed_uri(
+        entity,
+        builder,
+        uri,
+        local_root,
+        csp.cloned(),
+        request_sender,
+    )
 }
 
 fn initialization_script(

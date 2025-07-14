@@ -6,7 +6,7 @@ use crate::webview::protocol::asset::{
 use bevy::app::{App, Plugin};
 use bevy::platform::collections::hash_map::HashMap;
 use bevy::prelude::*;
-use bevy_webview_core::prelude::Csp;
+use bevy_webview_core::prelude::{Csp, Webview};
 use std::path::PathBuf;
 use std::sync::mpsc::{Receiver, Sender};
 use wry::RequestAsyncResponder;
@@ -27,12 +27,15 @@ impl Plugin for CustomProtocolPlugin {
                 (
                     start_load,
                     response.run_if(any_with_component::<WryResponseHandle>),
+                    #[cfg(feature = "hot-reload")]
+                    hot_reload.run_if(on_event::<AssetEvent<WryResponseBody>>),
                 ),
             );
     }
 }
 
 pub struct WryRequest {
+    pub webview: Entity,
     pub path: PathBuf,
     pub csp: Option<Csp>,
     pub responder: RequestAsyncResponder,
@@ -56,29 +59,52 @@ fn start_load(
             csp: request.csp,
             path: request.path.clone(),
         };
-        commands.spawn((
+        commands.entity(request.webview).insert((
             args.clone(),
             WryResponseHandle(asset_server.load(request.path.clone())),
         ));
-
         map.0.insert(args, request.responder);
     }
 }
 
 fn response(
     mut commands: Commands,
-    mut responses: ResMut<Assets<WryResponseBody>>,
+    responses: ResMut<Assets<WryResponseBody>>,
     mut handles: Query<(Entity, &WryRequestArgs, &WryResponseHandle)>,
     mut map: NonSendMut<WryResponseMap>,
 ) {
-    for (entity, args, handle) in handles.iter_mut() {
-        let Some(response_body) = responses.remove(handle.0.id()) else {
+    for (webview_entity, args, handle) in handles.iter_mut() {
+        let Some(response_body) = responses.get(handle.0.id()) else {
             continue;
         };
         let Some(responder) = map.0.remove(args) else {
             continue;
         };
-        responder.respond(convert_to_response(response_body.0, args));
-        commands.entity(entity).despawn();
+        responder.respond(convert_to_response(response_body.0.clone(), args));
+        commands.entity(webview_entity).remove::<WryRequestArgs>();
+    }
+}
+
+#[cfg(feature = "hot-reload")]
+fn hot_reload(
+    mut er: EventReader<AssetEvent<WryResponseBody>>,
+    wry_webviews: NonSend<crate::prelude::WryWebViews>,
+    webviews: Query<(Entity, &WryResponseHandle), With<Webview>>,
+    asset_server: Res<AssetServer>,
+) {
+    for event in er.read() {
+        if let AssetEvent::Modified { id } = event
+            && let Some(webview_entity) = webviews
+                .iter()
+                .find_map(|(entity, handle)| (id == &handle.0.id()).then_some(entity))
+            && let Some(webview) = wry_webviews.get(&webview_entity)
+        {
+            if let Some(path) = asset_server.get_path(*id) {
+                info!("Reloading webview {webview_entity}: {path:?}");
+            }
+            if let Err(e) = webview.reload() {
+                warn!("Failed to reload webview {webview_entity}: {e}");
+            }
+        }
     }
 }

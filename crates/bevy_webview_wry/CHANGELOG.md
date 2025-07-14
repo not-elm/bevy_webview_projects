@@ -1,3 +1,9 @@
+## v0.5.0(Unreleased)
+
+### Features
+
+- Support hot-reloading feature flag to enable hot-reloading of webviews.
+
 ## v0.4.0
 
 ### Breaking Changes
