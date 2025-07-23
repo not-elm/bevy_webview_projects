@@ -16,7 +16,7 @@ edition = "2024"
 
 [workspace.dependencies]
 bevy = { version = "0.16", default-features = false }
-bevy_flurx = { version = "0.11" }
+bevy_flurx = { version = "0.12" }
 bevy_flurx_ipc = { path = "crates/bevy_flurx_ipc", version = "0.4" }
 bevy_flurx_ipc_macro = { path = "crates/bevy_flurx_ipc_macro", version = "0.4" }
 bevy_webview_core = { path = "crates/bevy_webview_core", version = "0.4" }
@@ -34,7 +34,5 @@ redundant_else = "warn"
 match_same_arms = "warn"
 semicolon_if_nothing_returned = "warn"
 
-[workspace.lints.rust]
-missing_docs = "warn"
 
 

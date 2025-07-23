@@ -23,6 +23,11 @@ pub mod api {
     pub use bevy_flurx_api::prelude::*;
 }
 
+/// Provides the [`bevy_flurx`] functionality.
+pub mod flurx {
+    pub use bevy_flurx::prelude::*;
+}
+
 pub mod embedding;
 mod util;
 pub mod webview;
@@ -32,6 +37,7 @@ pub mod prelude {
     pub use crate::{WebviewWryPlugin, embedding::prelude::*, webview::prelude::*};
     #[cfg(feature = "child_window")]
     pub use bevy_child_window::prelude::*;
+    pub use bevy_flurx::prelude::*;
     #[cfg(feature = "api")]
     pub use bevy_flurx_api::prelude::*;
     pub use bevy_flurx_ipc::prelude::*;
