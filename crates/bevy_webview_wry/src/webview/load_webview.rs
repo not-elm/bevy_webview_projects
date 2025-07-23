@@ -7,10 +7,7 @@ use crate::webview::handlers::{HandlerQueries, WryEventParams};
 use crate::webview::load_webview::ipc::IpcHandlerParams;
 use crate::webview::load_webview::protocol::feed_uri;
 use crate::webview::protocol::WryRequestSender;
-use bevy::prelude::{
-    App, Commands, Entity, Name, NonSend, NonSendMut, Or, Plugin, PreUpdate, Query, Res, Window,
-    With, Without,
-};
+use bevy::prelude::*;
 use bevy::winit::WinitWindows;
 use bevy_webview_core::bundle::embedding::{Bounds, EmbedWithin};
 use bevy_webview_core::prelude::*;
@@ -33,9 +30,9 @@ impl Plugin for LoadWebviewPlugin {
         {
             use bevy::prelude::IntoScheduleConfigs;
             app.add_systems(
-                PreUpdate,
-                (resize_webview_inner_window
-                    .run_if(bevy::prelude::on_event::<bevy::window::WindowResized>),),
+                Update,
+                move_webview_inner_window
+                    .run_if(on_event::<WindowMoved>.or(on_event::<bevy::window::WindowResized>)),
             );
         }
     }
@@ -280,7 +277,6 @@ unsafe fn attach_inner_window(
     // SAFETY: The `webview` is a valid pointer to an `NSView`.
     unsafe {
         use objc2_app_kit::NSAutoresizingMaskOptions;
-
         webview.removeFromSuperview();
         webview.setAutoresizingMask(
             NSAutoresizingMaskOptions::ViewHeightSizable
@@ -303,10 +299,8 @@ unsafe fn attach_inner_window(
 
         let content_rect = application_window.contentRectForFrameRect(application_window.frame());
         inner_window.setFrame_display(content_rect, true);
-        inner_window.setHidesOnDeactivate(false);
         inner_window.setTitlebarAppearsTransparent(true);
         inner_window.setTitleVisibility(objc2_app_kit::NSWindowTitleVisibility::Hidden);
-
         inner_window.setContentView(Some(webview));
 
         inner_window.becomeKeyWindow();
@@ -334,18 +328,27 @@ unsafe fn attach_inner_window(
 }
 
 #[cfg(target_os = "macos")]
-fn resize_webview_inner_window(
-    mut er: bevy::prelude::EventReader<bevy::window::WindowResized>,
+fn move_webview_inner_window(
+    mut er_moved: EventReader<WindowMoved>,
+    mut er_resized: EventReader<bevy::window::WindowResized>,
     winit_windows: NonSend<WinitWindows>,
     wry_web_views: NonSend<WryWebViews>,
 ) {
+    let mut windows = bevy::platform::collections::HashSet::new();
     #[allow(deprecated)]
     use wry::raw_window_handle::{HasRawWindowHandle, RawWindowHandle};
-    for e in er.read() {
-        let Some(winit_window) = winit_windows.get_window(e.window) else {
+    for window in er_moved
+        .read()
+        .map(|e| e.window)
+        .chain(er_resized.read().map(|e| e.window))
+    {
+        if !windows.insert(window) {
+            continue; // Skip if we've already processed this window
+        }
+        let Some(winit_window) = winit_windows.get_window(window) else {
             continue;
         };
-        let Some(wry_webview) = wry_web_views.0.get(&e.window) else {
+        let Some(wry_webview) = wry_web_views.0.get(&window) else {
             continue;
         };
         #[allow(deprecated)]
@@ -362,8 +365,7 @@ fn resize_webview_inner_window(
         let Some(ns_window) = ns_view.window() else {
             continue;
         };
-        wry_webview
-            .ns_window()
-            .setFrame_display(ns_window.contentRectForFrameRect(ns_window.frame()), true);
+        let wry_ns_window = wry_webview.ns_window();
+        wry_ns_window.setFrame_display(ns_window.contentRectForFrameRect(ns_window.frame()), false);
     }
 }

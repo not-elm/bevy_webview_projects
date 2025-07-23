@@ -59,7 +59,7 @@ fn start_load(
             csp: request.csp,
             path: request.path.clone(),
         };
-        commands.entity(request.webview).insert((
+        commands.entity(request.webview).try_insert((
             args.clone(),
             WryResponseHandle(asset_server.load(request.path.clone())),
         ));
@@ -81,7 +81,9 @@ fn response(
             continue;
         };
         responder.respond(convert_to_response(response_body.0.clone(), args));
-        commands.entity(webview_entity).remove::<WryRequestArgs>();
+        commands
+            .entity(webview_entity)
+            .try_remove::<WryRequestArgs>();
     }
 }
 
