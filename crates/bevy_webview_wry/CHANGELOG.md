@@ -1,8 +1,9 @@
 ## v0.5.0(Unreleased)
 
 ### Features
-
 - Support hot-reloading feature flag to enable hot-reloading of webviews.
+### Bugfixes
+- Fixed an issue where the embedded webview position would sometimes be incorrect when the window moved.
 
 ## v0.4.0
 
