@@ -1,8 +1,17 @@
 ## v0.5.0(Unreleased)
 
+### Breaking Changes
+
+- Reexport `bevy_flurx` from `bevy_webview_wry` crate.
+    - This is a measure to prevent version differences in bevy_flurx.
+
 ### Features
+
+- Update `bevy_flurx` version to `0.12.0`.
 - Support hot-reloading feature flag to enable hot-reloading of webviews.
+
 ### Bugfixes
+
 - Fixed an issue where the embedded webview position would sometimes be incorrect when the window moved.
 
 ## v0.4.0

@@ -4,7 +4,6 @@
 
 use bevy::prelude::*;
 use bevy::window::PrimaryWindow;
-use bevy_flurx::prelude::*;
 use bevy_flurx_ipc::prelude::*;
 use bevy_webview_wry::prelude::*;
 use std::path::PathBuf;
