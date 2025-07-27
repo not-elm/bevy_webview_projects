@@ -9,7 +9,7 @@ use std::sync::LazyLock;
 use wry::http::Response;
 use wry::http::header::{CONTENT_SECURITY_POLICY, CONTENT_TYPE};
 
-#[derive(Debug, Component)]
+#[derive(Debug, Component, Clone)]
 pub struct WryResponseHandle(pub Handle<WryResponseBody>);
 
 #[derive(Debug, Asset, TypePath)]
@@ -156,6 +156,17 @@ const EXTENSION_MAP: &[(&[&str], &str)] = &[
     (&["wav"], "audio/wav"),
     (&["weba"], "audio/webm"),
     (&["webm"], "video/web"),
+    (&["woff"], "font/woff"),
+    (&["woff2"], "font/woff2"),
+    (&["xhtml"], "application/xhtml+xml"),
+    (&["xls"], "application/vnd.ms-excel"),
+    (
+        &["xlsx"],
+        "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+    ),
+    (&["xml"], "application/xml"),
+    (&["xul"], "application/vnd.mozilla.xul+xml"),
+    (&["7z"], "application/x-7z-compressed"),
 ];
 
 static EXTENSIONS: LazyLock<Vec<&str>> = LazyLock::new(|| {

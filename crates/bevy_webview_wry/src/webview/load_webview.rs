@@ -6,7 +6,7 @@ use crate::webview::WryWebViews;
 use crate::webview::handlers::{HandlerQueries, WryEventParams};
 use crate::webview::load_webview::ipc::IpcHandlerParams;
 use crate::webview::load_webview::protocol::feed_uri;
-use crate::webview::protocol::WryRequestSender;
+use crate::webview::protocol::{WryRequestSender, WryResponseHandles};
 use bevy::prelude::*;
 use bevy::winit::WinitWindows;
 use bevy_webview_core::bundle::embedding::{Bounds, EmbedWithin};
@@ -120,7 +120,7 @@ fn load_web_views(
         }
         commands
             .entity(webview_entity)
-            .insert(WebviewInitialized(()));
+            .insert((WebviewInitialized(()), WryResponseHandles::default()));
         web_views.0.insert(webview_entity, webview);
     }
 }
