@@ -1,7 +1,7 @@
 mod asset;
 
 use crate::webview::protocol::asset::{
-    convert_to_response, WryRequestArgs, WryResponseBody, WryResponseHandle, WryResponseLoader,
+    WryRequestArgs, WryResponseBody, WryResponseHandle, WryResponseLoader, convert_to_response,
 };
 use bevy::app::{App, Plugin};
 use bevy::platform::collections::hash_map::HashMap;

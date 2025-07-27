@@ -6,8 +6,8 @@ use serde::{Deserialize, Serialize};
 use std::fmt::{Debug, Display, Formatter};
 use std::path::{Path, PathBuf};
 use std::sync::LazyLock;
-use wry::http::header::{CONTENT_SECURITY_POLICY, CONTENT_TYPE};
 use wry::http::Response;
+use wry::http::header::{CONTENT_SECURITY_POLICY, CONTENT_TYPE};
 
 #[derive(Debug, Component, Clone)]
 pub struct WryResponseHandle(pub Handle<WryResponseBody>);
