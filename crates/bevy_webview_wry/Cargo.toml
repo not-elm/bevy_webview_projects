@@ -52,7 +52,7 @@ gtk = { version = "0.18" }
 rfd = { version = "0.15", default-features = false, features = ["gtk3"] }
 
 [dev-dependencies]
-bevy = { version = "0.16", features = ["file_watcher"] }
+bevy = { version = "0.16" }
 bevy_flurx_ipc = { path = "../bevy_flurx_ipc" }
 serde = { workspace = true }
 serde_json = { workspace = true }
