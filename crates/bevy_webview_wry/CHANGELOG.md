@@ -1,5 +1,7 @@
 ## v0.5.0
 
+[Release notes](https://github.com/not-elm/bevy_webview_projects/releases/tag/v0.5.0)
+
 ### Breaking Changes
 
 - Reexport `bevy_flurx` from `bevy_webview_wry` crate.
