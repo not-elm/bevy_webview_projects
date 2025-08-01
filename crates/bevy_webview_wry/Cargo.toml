@@ -3,6 +3,7 @@ name = "bevy_webview_wry"
 description = "Allows you to create a webview based on wry"
 categories = ["gui", "game-development"]
 keywords = ["game", "gamedev", "bevy", "wry"]
+exclude = ["examples/", "assets/", "docs/"]
 readme = "README.md"
 authors.workspace = true
 version.workspace = true

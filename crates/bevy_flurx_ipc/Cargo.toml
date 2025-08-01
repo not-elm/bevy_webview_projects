@@ -3,6 +3,7 @@ name = "bevy_flurx_ipc"
 description = "provides a way for ipc communication using bevy_flurx"
 categories = ["game-development"]
 keywords = ["game", "gamedev", "bevy", "ipc", "async"]
+exclude = ["examples/"]
 readme = "README.md"
 authors.workspace = true
 version.workspace = true
